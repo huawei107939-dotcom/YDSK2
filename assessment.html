@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>คัมภีร์นักเดินทาง — เยาวชวน สงขลา</title>
+<meta name="description" content="ค้นหาวิญญาณนักเดินทางในเมืองเก่าสงขลา ทำแบบประเมินแล้วรับเส้นทางท่องเที่ยวที่เหมาะกับคุณ"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --mint:      #4CAF88;
+  --mint-dk:   #2E7D5A;
+  --mint-lt:   #DDF7EA;
+  --forest:    #2E7D32;
+  --gold:      #E8B04A;
+  --gold-lt:   #FFF3D4;
+  --purple:    #7C3AED;
+  --text:      #1a1a2e;
+  --text-mid:  #4a5568;
+  --text-muted:#8fa394;
+  --white:     #ffffff;
+  --card-bg:   rgba(255,255,255,0.88);
+  --border:    rgba(76,175,136,0.18);
+  --ease:      cubic-bezier(0.4,0,0.2,1);
+  --spring:    cubic-bezier(0.34,1.56,0.64,1);
+  --font:      'Prompt','Inter',-apple-system,sans-serif;
+}
+
+/* ═══════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:#0a1628;
+  color:var(--text);
+  min-height:100vh;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button{cursor:pointer;font-family:var(--font)}
+a{text-decoration:none;color:inherit}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+}
+
+/* ═══════════════════════════════════════════
+   SCENE BACKGROUND
+═══════════════════════════════════════════ */
+#sceneBg{
+  position:fixed;inset:0;z-index:0;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  transition:opacity 0.6s var(--ease);
+  will-change:transform;
+}
+#sceneBg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(10,22,40,0.25) 0%,
+    rgba(10,22,40,0.10) 40%,
+    rgba(10,22,40,0.72) 100%
+  );
+}
+.scene-css{
+  position:fixed;inset:0;z-index:0;
+  transition:opacity 0.6s var(--ease);
+}
+
+/* Gradient fallback scenes */
+.grad-gate    {background:linear-gradient(135deg,#1a0a2e 0%,#3d1a7a 40%,#e8b04a 100%)}
+.grad-oldtown {background:linear-gradient(135deg,#0d2818 0%,#1a4a2e 40%,#4CAF88 100%)}
+.grad-guardian{background:linear-gradient(135deg,#1a0a2e 0%,#6b21a8 50%,#e8b04a 100%)}
+.grad-market  {background:linear-gradient(135deg,#2d1b00 0%,#7c3d00 50%,#e8b04a 100%)}
+.grad-sunset  {background:linear-gradient(135deg,#1a0010 0%,#7c1a40 40%,#e85a1a 80%,#e8b04a 100%)}
+.grad-garden  {background:linear-gradient(135deg,#021a0a 0%,#0d3320 40%,#2E7D5A 100%)}
+.grad-mission {background:linear-gradient(135deg,#0a0a1a 0%,#1a1a3e 40%,#3d3d7a 100%)}
+.grad-door    {background:linear-gradient(135deg,#0a0a0a 0%,#1a0a0a 40%,#4a1010 100%)}
+.grad-gate2   {background:linear-gradient(135deg,#001a10 0%,#1a3a20 40%,#4CAF88 100%)}
+.grad-final   {background:linear-gradient(135deg,#0a0a1a 0%,#1a1040 50%,#7C3AED 100%)}
+
+/* Floating particles */
+#particles{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.particle{
+  position:absolute;
+  border-radius:50%;
+  opacity:0;
+  animation:floatUp linear infinite;
+  pointer-events:none;
+}
+@keyframes floatUp{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:0.7}
+  90%{opacity:0.4}
+  100%{transform:translateY(-20vh) scale(1.5);opacity:0}
+}
+
+/* ═══════════════════════════════════════════
+   MAIN WRAPPER
+═══════════════════════════════════════════ */
+#app{
+  position:relative;z-index:10;
+  height:100vh;height:100dvh;
+  display:flex;flex-direction:column;
+  align-items:center;
+  padding:0 16px;
+  overflow:hidden;
+  opacity:0;animation:fadeIn 0.8s 0.2s var(--ease) forwards;
+}
+
+/* ═══════════════════════════════════════════
+   HEADER / PROGRESS
+═══════════════════════════════════════════ */
+#header{
+  width:100%;max-width:680px;
+  display:flex;align-items:center;
+  justify-content:space-between;
+  padding:16px 0 12px;
+  position:sticky;top:0;z-index:100;
+}
+.logo-sm{
+  display:flex;align-items:center;gap:8px;
+  font-size:15px;font-weight:700;color:var(--white);
+  text-shadow:0 1px 6px rgba(0,0,0,0.5);
+  opacity:0;animation:slideDown 0.5s 0.3s var(--spring) forwards;
+}
+.logo-sm svg{filter:drop-shadow(0 0 6px rgba(76,175,136,0.8))}
+
+.progress-wrap{
+  display:flex;flex-direction:column;align-items:flex-end;gap:4px;
+  opacity:0;animation:slideDown 0.5s 0.4s var(--spring) forwards;
+}
+.progress-label{
+  font-size:11px;font-weight:600;
+  color:rgba(255,255,255,0.9);
+  letter-spacing:0.5px;
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+.progress-bar-track{
+  width:120px;height:5px;
+  background:rgba(255,255,255,0.2);
+  border-radius:99px;overflow:hidden;
+}
+.progress-bar-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--mint),var(--gold));
+  border-radius:99px;
+  transition:width 0.6s var(--ease);
+  box-shadow:0 0 8px rgba(76,175,136,0.8);
+}
+
+.back-btn{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.25);
+  color:white;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;font-weight:500;
+  backdrop-filter:blur(8px);
+  transition:all 0.25s;
+  display:none;
+  min-height:36px;
+}
+.back-btn:hover{background:rgba(255,255,255,0.25);transform:scale(1.02)}
+.back-btn.show{display:flex;align-items:center;gap:4px}
+
+/* Sound btn */
+.sound-btn{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.25);
+  color:white;padding:6px 10px;
+  border-radius:20px;font-size:14px;
+  backdrop-filter:blur(8px);
+  transition:all 0.25s;min-height:36px;
+}
+.sound-btn:hover{background:rgba(255,255,255,0.25)}
+
+/* ═══════════════════════════════════════════
+   INTRO SCREEN
+═══════════════════════════════════════════ */
+#introScreen{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;flex:1;
+  width:100%;max-width:520px;
+  padding:20px 0 40px;
+  text-align:center;
+}
+.intro-glow{
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(232,176,74,0.3) 0%,transparent 70%);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 24px;
+  animation:pulseGlow 2.5s ease-in-out infinite;
+  font-size:64px;
+}
+@keyframes pulseGlow{
+  0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(232,176,74,0.3)}
+  50%{transform:scale(1.05);box-shadow:0 0 60px rgba(232,176,74,0.6)}
+}
+.intro-title{
+  font-size:clamp(22px,5vw,30px);font-weight:700;
+  color:var(--white);
+  text-shadow:0 2px 12px rgba(0,0,0,0.5);
+  line-height:1.3;margin-bottom:8px;
+}
+.intro-subtitle{
+  font-size:14px;color:rgba(255,255,255,0.75);
+  margin-bottom:24px;letter-spacing:0.5px;
+}
+.intro-card{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px;
+  padding:20px 24px;
+  margin-bottom:28px;
+  text-align:left;
+}
+.intro-card p{
+  font-size:14px;line-height:1.8;
+  color:rgba(255,255,255,0.9);
+  font-weight:400;
+}
+.intro-card strong{color:var(--gold)}
+.btn-start{
+  width:100%;max-width:320px;
+  height:58px;
+  background:linear-gradient(135deg,var(--gold) 0%,#d4891a 100%);
+  color:#1a0a00;
+  font-size:17px;font-weight:700;
+  border:none;border-radius:18px;
+  box-shadow:0 8px 32px rgba(232,176,74,0.45),0 2px 8px rgba(0,0,0,0.2);
+  transition:all 0.25s var(--ease);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  letter-spacing:0.2px;
+  position:relative;overflow:hidden;
+}
+.btn-start::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.2) 0%,transparent 60%);
+}
+.btn-start:hover{transform:scale(1.03) translateY(-2px);box-shadow:0 14px 40px rgba(232,176,74,0.55)}
+.btn-start:active{transform:scale(0.98)}
+
+/* ═══════════════════════════════════════════
+   QUESTION SCREEN
+═══════════════════════════════════════════ */
+#questionScreen{
+  display:none;flex-direction:column;
+  align-items:center;
+  flex:1;width:100%;max-width:680px;
+  padding-bottom:28px;
+  overflow-y:auto;
+  scrollbar-width:none;
+}
+#questionScreen::-webkit-scrollbar{display:none}
+
+.story-card{
+  width:100%;
+  background:var(--card-bg);
+  backdrop-filter:blur(28px) saturate(200%);
+  -webkit-backdrop-filter:blur(28px) saturate(200%);
+  border:1px solid rgba(255,255,255,0.5);
+  border-radius:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.35),0 2px 0 rgba(255,255,255,0.7) inset;
+  padding:24px 24px 20px;
+  transform:translateY(40px);opacity:0;
+  transition:transform 0.6s var(--spring),opacity 0.6s var(--ease);
+  margin-top:auto;
+}
+.story-card.visible{transform:translateY(0);opacity:1}
+
+.scene-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--mint-lt);
+  border-radius:99px;padding:5px 12px;
+  font-size:11.5px;font-weight:600;color:var(--mint-dk);
+  margin-bottom:12px;letter-spacing:0.3px;
+}
+
+.story-text{
+  font-size:15px;line-height:1.75;
+  color:var(--text-mid);
+  margin-bottom:18px;
+  min-height:52px;
+  font-weight:400;
+}
+
+.question-title{
+  font-size:17px;font-weight:700;
+  color:var(--text);
+  margin-bottom:16px;
+  line-height:1.4;
+}
+
+/* Choice Cards */
+.choices{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+@media(max-width:420px){
+  .choices{grid-template-columns:1fr}
+}
+
+.choice-card{
+  background:#fff;
+  border:1.8px solid var(--border);
+  border-radius:16px;
+  padding:14px 14px 12px;
+  text-align:left;
+  transition:all 0.22s var(--ease);
+  cursor:pointer;
+  position:relative;overflow:hidden;
+  min-height:44px;
+  transform:translateY(20px);opacity:0;
+  animation:choiceIn 0.4s var(--spring) forwards;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+}
+.choice-card:nth-child(1){animation-delay:0.05s}
+.choice-card:nth-child(2){animation-delay:0.1s}
+.choice-card:nth-child(3){animation-delay:0.15s}
+.choice-card:nth-child(4){animation-delay:0.2s}
+
+@keyframes choiceIn{
+  to{transform:translateY(0);opacity:1}
+}
+
+.choice-card:hover:not(.locked){
+  border-color:var(--mint);
+  box-shadow:0 6px 24px rgba(76,175,136,0.20),0 0 0 2px rgba(76,175,136,0.12);
+  transform:translateY(-3px) scale(1.02);
+}
+.choice-card:active:not(.locked){transform:scale(0.97)}
+
+.choice-card.selected{
+  border-color:var(--mint);
+  background:linear-gradient(135deg,#e8fdf3 0%,#f0fff7 100%);
+  box-shadow:0 0 0 2.5px var(--mint),0 8px 28px rgba(76,175,136,0.25);
+  animation:selectedPulse 0.4s var(--spring);
+}
+@keyframes selectedPulse{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
+
+.choice-card.locked:not(.selected){
+  opacity:0.45;cursor:not-allowed;
+  filter:grayscale(0.3);
+}
+
+.choice-icon{
+  font-size:26px;margin-bottom:8px;display:block;
+  line-height:1;
+  transition:transform 0.3s var(--spring);
+}
+.choice-card:hover .choice-icon{transform:scale(1.15)}
+.choice-card.selected .choice-icon{animation:iconBounce 0.4s var(--spring)}
+@keyframes iconBounce{0%{transform:scale(1)} 50%{transform:scale(1.3)} 100%{transform:scale(1)}}
+
+.choice-label{
+  font-size:13px;font-weight:600;
+  color:var(--text);line-height:1.35;
+}
+.choice-card.selected .choice-label{color:var(--mint-dk)}
+
+/* Ripple */
+.choice-ripple{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(76,175,136,0.35) 0%,transparent 70%);
+  transform:scale(0);pointer-events:none;
+  animation:rippleOut 0.6s ease forwards;
+}
+@keyframes rippleOut{to{transform:scale(4);opacity:0}}
+
+/* ═══════════════════════════════════════════
+   LOADING SCREEN
+═══════════════════════════════════════════ */
+#loadingScreen{
+  display:none;flex-direction:column;align-items:center;
+  justify-content:center;flex:1;
+  width:100%;text-align:center;
+  padding:40px 20px;
+}
+.magic-circle-wrap{
+  position:relative;width:180px;height:180px;
+  margin:0 auto 32px;
+}
+.magic-circle{
+  width:180px;height:180px;
+  border:2px solid rgba(232,176,74,0.3);
+  border-radius:50%;
+  position:absolute;inset:0;
+}
+.magic-ring-1{
+  width:160px;height:160px;
+  border:2px solid rgba(76,175,136,0.5);
+  border-top-color:var(--mint);
+  border-radius:50%;
+  position:absolute;
+  top:10px;left:10px;
+  animation:spin 1.8s linear infinite;
+}
+.magic-ring-2{
+  width:120px;height:120px;
+  border:2px solid rgba(232,176,74,0.5);
+  border-bottom-color:var(--gold);
+  border-radius:50%;
+  position:absolute;top:30px;left:30px;
+  animation:spin 1.2s linear infinite reverse;
+}
+.magic-ring-3{
+  width:80px;height:80px;
+  border:1px solid rgba(124,58,237,0.5);
+  border-left-color:var(--purple);
+  border-radius:50%;
+  position:absolute;top:50px;left:50px;
+  animation:spin 0.9s linear infinite;
+}
+.magic-center{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:36px;
+  animation:pulseGlow 1.5s ease-in-out infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.loading-particles{
+  position:absolute;inset:0;
+  animation:spin 8s linear infinite;
+}
+.loading-dot{
+  position:absolute;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--gold);
+  top:0;left:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 8px rgba(232,176,74,0.8);
+}
+
+.loading-text{
+  font-size:18px;font-weight:600;
+  color:rgba(255,255,255,0.95);
+  text-shadow:0 2px 8px rgba(0,0,0,0.5);
+  margin-bottom:12px;
+}
+.loading-sub{
+  font-size:13px;color:rgba(255,255,255,0.6);
+}
+.loading-dots span{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--mint);margin:0 3px;
+  animation:dotBounce 1.2s ease-in-out infinite;
+}
+.loading-dots span:nth-child(2){animation-delay:0.2s}
+.loading-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes dotBounce{0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1.2);opacity:1}}
+
+/* ═══════════════════════════════════════════
+   RESULT SCREEN
+═══════════════════════════════════════════ */
+#resultScreen{
+  display:none;flex-direction:column;
+  align-items:center;width:100%;max-width:680px;
+  padding:16px 0 40px;
+  overflow-y:auto;scrollbar-width:none;
+}
+#resultScreen::-webkit-scrollbar{display:none}
+
+.result-hero{
+  text-align:center;padding:20px 0 16px;
+  opacity:0;transform:translateY(24px);
+  animation:slideUp 0.6s 0.2s var(--spring) forwards;
+}
+.result-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:99px;padding:8px 18px;
+  font-size:12px;font-weight:600;
+  color:rgba(255,255,255,0.9);
+  margin-bottom:12px;letter-spacing:0.5px;
+}
+.result-emoji{
+  font-size:64px;
+  display:block;margin-bottom:12px;
+  animation:bigBounce 0.6s 0.5s var(--spring) both;
+}
+@keyframes bigBounce{
+  0%{transform:scale(0) rotate(-10deg)}
+  60%{transform:scale(1.15) rotate(3deg)}
+  100%{transform:scale(1) rotate(0deg)}
+}
+.result-name{
+  font-size:clamp(22px,5vw,28px);font-weight:700;
+  color:var(--white);
+  text-shadow:0 2px 12px rgba(0,0,0,0.4);
+  margin-bottom:6px;
+}
+.result-tagline{
+  font-size:14px;color:rgba(255,255,255,0.75);
+  margin-bottom:0;font-weight:400;
+}
+
+.result-card{
+  width:100%;
+  background:var(--card-bg);
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  border:1px solid rgba(255,255,255,0.5);
+  border-radius:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  padding:22px;
+  margin-bottom:12px;
+  opacity:0;transform:translateY(28px);
+}
+.result-card.r1{animation:slideUp 0.5s 0.4s var(--spring) forwards}
+.result-card.r2{animation:slideUp 0.5s 0.55s var(--spring) forwards}
+.result-card.r3{animation:slideUp 0.5s 0.7s var(--spring) forwards}
+.result-card.r4{animation:slideUp 0.5s 0.85s var(--spring) forwards}
+
+.card-section-title{
+  font-size:12px;font-weight:700;
+  color:var(--mint-dk);
+  letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;
+}
+
+.persona-desc{
+  font-size:14px;line-height:1.8;color:var(--text-mid);font-weight:400;
+}
+
+.secondary-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--gold-lt);
+  border:1px solid rgba(232,176,74,0.3);
+  border-radius:12px;padding:8px 14px;
+  margin-top:12px;font-size:13px;font-weight:600;color:#7a4a00;
+}
+
+/* Score bars */
+.score-list{display:flex;flex-direction:column;gap:10px}
+.score-row{display:flex;align-items:center;gap:10px}
+.score-name{
+  font-size:12px;font-weight:600;color:var(--text-mid);
+  width:70px;flex-shrink:0;
+}
+.score-track{
+  flex:1;height:8px;background:rgba(0,0,0,0.06);
+  border-radius:99px;overflow:hidden;
+}
+.score-fill{
+  height:100%;border-radius:99px;width:0%;
+  background:linear-gradient(90deg,var(--mint),var(--forest));
+  transition:width 1s var(--ease);
+  box-shadow:0 0 6px rgba(76,175,136,0.4);
+}
+.score-fill.gold{background:linear-gradient(90deg,var(--gold),#d4891a)}
+.score-num{
+  font-size:12px;font-weight:700;
+  color:var(--mint-dk);width:24px;text-align:right;
+}
+
+/* Route cards */
+.route-list{display:flex;flex-direction:column;gap:10px}
+.route-item{
+  display:flex;align-items:center;gap:14px;
+  background:#f8fffe;
+  border:1px solid var(--border);
+  border-radius:14px;padding:12px 14px;
+  transition:all 0.2s;cursor:pointer;
+}
+.route-item:hover{
+  border-color:var(--mint);
+  box-shadow:0 4px 16px rgba(76,175,136,0.15);
+  transform:translateX(3px);
+}
+.route-icon{font-size:24px;flex-shrink:0}
+.route-info{flex:1}
+.route-name{font-size:13.5px;font-weight:600;color:var(--text)}
+.route-meta{
+  font-size:11px;color:var(--text-muted);
+  display:flex;align-items:center;gap:8px;margin-top:2px;
+}
+.eco-badge{
+  background:#e8fdf3;color:var(--mint-dk);
+  padding:1px 6px;border-radius:99px;
+  font-size:10px;font-weight:600;
+}
+
+/* Reason card */
+.reason-text{
+  font-size:13.5px;line-height:1.8;
+  color:var(--text-mid);font-weight:400;
+  background:var(--mint-lt);
+  border-radius:12px;padding:14px;
+  border-left:3px solid var(--mint);
+}
+
+/* CTA */
+.result-cta{
+  width:100%;max-width:340px;
+  height:58px;
+  background:linear-gradient(135deg,var(--mint) 0%,var(--mint-dk) 100%);
+  color:var(--white);
+  font-family:var(--font);
+  font-size:16px;font-weight:700;
+  border:none;border-radius:18px;
+  box-shadow:0 8px 28px rgba(76,175,136,0.45);
+  transition:all 0.25s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin:16px auto 0;
+  position:relative;overflow:hidden;
+  opacity:0;animation:slideUp 0.5s 1s var(--spring) forwards;
+}
+.result-cta::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.18) 0%,transparent 60%);
+}
+.result-cta:hover{transform:scale(1.03) translateY(-2px);box-shadow:0 14px 36px rgba(76,175,136,0.55)}
+.result-cta:active{transform:scale(0.98)}
+
+.retry-btn{
+  background:transparent;border:1px solid rgba(255,255,255,0.3);
+  color:rgba(255,255,255,0.7);padding:8px 20px;
+  border-radius:99px;font-size:12px;font-weight:500;
+  margin-top:10px;transition:all 0.2s;
+  opacity:0;animation:fadeIn 0.5s 1.2s forwards;
+}
+.retry-btn:hover{background:rgba(255,255,255,0.1);color:white}
+
+/* ═══════════════════════════════════════════
+   TRANSITIONS / UTILITIES
+═══════════════════════════════════════════ */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{to{transform:translateY(0);opacity:1}}
+@keyframes slideDown{to{transform:translateY(0);opacity:1}}
+.fade-out{animation:fadeOut 0.4s var(--ease) forwards!important}
+@keyframes fadeOut{to{opacity:0;transform:translateY(-20px)}}
+
+.typewriter{display:inline}
+.cursor{
+  display:inline-block;
+  width:2px;height:1em;
+  background:var(--mint);
+  vertical-align:text-bottom;
+  margin-left:2px;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink{50%{opacity:0}}
+
+/* Screen transitions */
+.screen-enter{animation:screenIn 0.5s var(--spring) forwards}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Sound indicator */
+#soundIndicator{
+  position:fixed;top:80px;right:16px;z-index:200;
+  background:rgba(0,0,0,0.6);
+  border-radius:99px;padding:4px 10px;
+  font-size:11px;color:white;
+  opacity:0;transition:opacity 0.3s;
+  backdrop-filter:blur(8px);
+}
+</style>
+</head>
+<body>
+
+<!-- SCENE BACKGROUNDS -->
+<div id="sceneBg"></div>
+<div id="sceneCss" class="scene-css"></div>
+<div id="particles"></div>
+<div id="soundIndicator"></div>
+
+<!-- APP WRAPPER -->
+<div id="app">
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="logo-sm" onclick="window.location.href='index.html'" style="cursor: pointer;">
+      <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+        <path d="M24 6C24 6 8 14 8 28C8 36.8 15.2 44 24 44C32.8 44 40 36.8 40 28C40 14 24 6 24 6Z" fill="#4CAF88" opacity="0.9"/>
+        <path d="M24 44C24 44 24 22 10 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      เยาวชวน สงขลา
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="back-btn" id="backBtn" aria-label="ย้อนกลับ">‹ ย้อนกลับ</button>
+      <button class="sound-btn" id="soundBtn" aria-label="เสียง" title="เปิด/ปิดเสียง">🔇</button>
+      <div class="progress-wrap" id="progressWrap" style="display:none">
+        <span class="progress-label" id="progressLabel">ด่าน 0 / 10</span>
+        <div class="progress-bar-track" role="progressbar" aria-valuenow="0" aria-valuemax="100">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INTRO SCREEN -->
+  <section id="introScreen" role="main" aria-label="หน้าแนะนำ">
+    <div class="intro-glow">🔮</div>
+    <h1 class="intro-title">คัมภีร์นักเดินทาง<br/>แห่งนครมนตราสงขลา</h1>
+    <p class="intro-subtitle">ค้นหาวิญญาณนักเดินทางในเมืองเก่าที่หลับใหล</p>
+    <div class="intro-card">
+      <p>ในคืนหนึ่ง คุณได้รับ<strong>แผนที่โบราณ</strong>ที่นำทางไปยัง<br/>"นครมนตราสงขลา" เมืองเก่าที่ซ่อนพลังวิเศษไว้ในอาหาร อาคาร ศิลปะ และเรื่องราวของผู้คน<br/><br/>
+      ว่ากันว่า… ผู้ที่ผ่านประตูเมืองจะได้รับการเปิดเผยว่าเป็น <strong>"นักเดินทางแบบใด"</strong> และจะได้รับเส้นทางลับที่เหมาะสมกับตัวตนของตน</p>
+    </div>
+    <button class="btn-start" id="startBtn" aria-label="เริ่มการผจญภัย">
+      🗺️ เริ่มการผจญภัย
+    </button>
+  </section>
+
+  <!-- QUESTION SCREEN -->
+  <section id="questionScreen" role="main" aria-label="แบบประเมิน" aria-live="polite">
+    <div class="story-card" id="storyCard">
+      <div class="scene-badge" id="sceneBadge">⚔️ บทที่ 1</div>
+      <p class="story-text" id="storyText"></p>
+      <h2 class="question-title" id="questionTitle"></h2>
+      <div class="choices" id="choicesGrid" role="group" aria-label="ตัวเลือก"></div>
+    </div>
+  </section>
+
+  <!-- LOADING SCREEN -->
+  <section id="loadingScreen" aria-label="กำลังวิเคราะห์" aria-live="polite">
+    <div class="magic-circle-wrap" aria-hidden="true">
+      <div class="magic-circle"></div>
+      <div class="magic-ring-1"></div>
+      <div class="magic-ring-2"></div>
+      <div class="magic-ring-3"></div>
+      <div class="loading-particles">
+        <div class="loading-dot" style="transform-origin:50% 90px;transform:rotate(0deg) translateY(-90px)"></div>
+        <div class="loading-dot" style="transform-origin:50% 90px;transform:rotate(90deg) translateY(-90px);background:var(--mint)"></div>
+        <div class="loading-dot" style="transform-origin:50% 90px;transform:rotate(180deg) translateY(-90px);background:var(--purple)"></div>
+        <div class="loading-dot" style="transform-origin:50% 90px;transform:rotate(270deg) translateY(-90px);background:white"></div>
+      </div>
+      <div class="magic-center">🌟</div>
+    </div>
+    <p class="loading-text" id="loadingText">กำลังค้นหาวิญญาณนักเดินทางของคุณ...</p>
+    <div class="loading-dots" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    <p class="loading-sub" style="margin-top:12px">AI กำลังวิเคราะห์บุคลิกนักเดินทาง</p>
+  </section>
+
+  <!-- RESULT SCREEN -->
+  <section id="resultScreen" role="main" aria-label="ผลการประเมิน" aria-live="polite">
+    <div class="result-hero">
+      <div class="result-badge">🏆 ผลการวิเคราะห์คัมภีร์นักเดินทาง</div>
+      <span class="result-emoji" id="resultEmoji">🍜</span>
+      <h2 class="result-name" id="resultName">นักปรุงรสแห่งนคร</h2>
+      <p class="result-tagline" id="resultTagline">บุคลิกนักเดินทางหลักของคุณ</p>
+    </div>
+
+    <div class="result-card r1">
+      <div class="card-section-title">🧬 ตัวตนของคุณ</div>
+      <p class="persona-desc" id="personaDesc"></p>
+      <div class="secondary-badge" id="secondaryBadge">🥈 บุคลิกรอง: <span id="secondaryName">–</span></div>
+    </div>
+
+    <div class="result-card r2">
+      <div class="card-section-title">📊 คะแนนแต่ละด้าน</div>
+      <div class="score-list" id="scoreList"></div>
+    </div>
+
+    <div class="result-card r3">
+      <div class="card-section-title">🗺️ เส้นทางที่เหมาะกับคุณ</div>
+      <div class="route-list" id="routeList"></div>
+    </div>
+
+    <div class="result-card r4">
+      <div class="card-section-title">✨ เหตุผลที่เหมาะกับคุณ</div>
+      <p class="reason-text" id="reasonText"></p>
+    </div>
+
+    <button class="result-cta" id="ctaBtn" aria-label="เริ่มทริป">
+      🌿 เริ่มออกเดินทาง
+    </button>
+    <button class="retry-btn" id="retryBtn" aria-label="ทำแบบประเมินใหม่">↺ ทำแบบประเมินอีกครั้ง</button>
+  </section>
+
+</div><!-- /app -->
+
+<script>
+/* ══════════════════════════════════════════════════════
+   DATA — QUESTIONS
+══════════════════════════════════════════════════════ */
+const SCENES = [
+  {
+    bg:'gate',    cssClass:'grad-gate',
+    badge:'🌟 บทนำ — ประตูแห่งการค้นพบ',
+    story:'เมื่อคุณเดินทางมาถึงประตูเมืองเก่า เสียงระฆังเวทมนตร์ดังขึ้น ประตูเปิดออกพร้อมกับแสง 4 สี คุณต้องเลือกสิ่งแรกที่หัวใจเรียกร้อง',
+    question:'สิ่งแรกที่คุณอยากค้นพบในเมืองนี้คือ…',
+    choices:[
+      {icon:'🍜',label:'ร้านอาหารเก่าแก่ที่มีสูตรลับจากบรรพบุรุษ',scores:{Food:2}},
+      {icon:'🏛️',label:'อาคารโบราณที่เก็บความทรงจำของเมือง',scores:{History:2}},
+      {icon:'🎨',label:'ถนนศิลปะที่เต็มไปด้วยภาพวาดและสีสัน',scores:{Art:2}},
+      {icon:'📸',label:'มุมลับของเมืองที่เหมาะสำหรับบันทึกภาพ',scores:{Photo:2}},
+    ]
+  },
+  {
+    bg:'oldtown',  cssClass:'grad-oldtown',
+    badge:'🏘️ บทที่ 2 — ใจกลางเมืองเก่า',
+    story:'แผนที่เวทมนตร์ปรากฏขึ้น มันพาคุณเข้าสู่ใจกลางเมือง ที่ซึ่งอดีตและปัจจุบันยังคงอยู่ร่วมกัน\n\nระหว่างเดินบนถนนเก่า คุณพบสถานที่หนึ่งที่หยุดสายตาคุณไว้',
+    question:'สถานที่ที่ดึงดูดสายตาคุณมากที่สุดคือ…',
+    choices:[
+      {icon:'🍜',label:'ร้านอาหารที่คนท้องถิ่นต่อคิวยาว',scores:{Food:2}},
+      {icon:'🏛️',label:'บ้านเก่าที่มีเรื่องเล่ามากมาย',scores:{History:2}},
+      {icon:'🎨',label:'กำแพงภาพวาดที่สะท้อนชีวิตคนในเมือง',scores:{Art:2}},
+      {icon:'📸',label:'ตรอกเล็ก ๆ ที่มีแสงสวยเหมือนภาพวาด',scores:{Photo:2}},
+    ]
+  },
+  {
+    bg:'guardian', cssClass:'grad-guardian',
+    badge:'👤 บทที่ 3 — ผู้พิทักษ์ความทรงจำ',
+    story:'หลังจากเดินผ่านถนนเก่า คุณพบชาวเมืองผู้เป็นผู้พิทักษ์ความทรงจำ เขามอบกุญแจหนึ่งดอกและถาม…',
+    question:'"เจ้าต้องการรู้จักเมืองนี้ผ่านสิ่งใด?"',
+    choices:[
+      {icon:'🍜',label:'เรียนรู้สูตรอาหารและภูมิปัญญาการกิน',scores:{Food:1,Culture:1}},
+      {icon:'🏛️',label:'ฟังเรื่องราวประวัติศาสตร์จากคนรุ่นเก่า',scores:{History:2}},
+      {icon:'🎨',label:'เรียนรู้งานฝีมือและการสร้างสรรค์ของชุมชน',scores:{Art:1,Shopping:1}},
+      {icon:'🌏',label:'พูดคุยกับผู้คนและเข้าใจชีวิตของพวกเขา',scores:{Culture:2}},
+    ]
+  },
+  {
+    bg:'market',   cssClass:'grad-market',
+    badge:'🛍️ บทที่ 4 — ตลาดกลางเมือง',
+    story:'กุญแจเปิดประตูสู่ตลาดกลางเมือง ที่แห่งนี้ไม่ได้ขายเพียงสินค้า แต่เก็บเรื่องราวของผู้คนไว้ในทุกชิ้นงาน…',
+    question:'คุณจะเลือกสิ่งใดกลับบ้าน?',
+    choices:[
+      {icon:'🍜',label:'ขนมและอาหารที่มีเรื่องราว',scores:{Food:2}},
+      {icon:'🏛️',label:'หนังสือหรือบันทึกเรื่องราวเมือง',scores:{History:2}},
+      {icon:'🎨',label:'งานศิลป์หรือของทำมือจากชุมชน',scores:{Shopping:2}},
+      {icon:'🛍️',label:'ของฝากที่เป็นเอกลักษณ์ของสงขลา',scores:{Shopping:2}},
+    ]
+  },
+  {
+    bg:'sunset',   cssClass:'grad-sunset',
+    badge:'🌅 บทที่ 5 — พระอาทิตย์ตก',
+    story:'เมื่อพระอาทิตย์ตก เมืองมนตราเปลี่ยนไป แสงไฟเผยให้เห็นสถานที่ศักดิ์สิทธิ์และมุมสงบที่ซ่อนอยู่…',
+    question:'คุณเลือกเดินทางไปที่ใด?',
+    choices:[
+      {icon:'⛩️',label:'ศาลเจ้าและสถานที่แห่งความเชื่อ',scores:{Faith:2}},
+      {icon:'🏛️',label:'อาคารเก่าที่เล่าเรื่องราวของอดีต',scores:{History:1}},
+      {icon:'📸',label:'จุดชมวิวที่มองเห็นเมืองทั้งเมือง',scores:{Photo:1,Relax:1}},
+      {icon:'🌏',label:'ชุมชนที่ผู้คนยังใช้ชีวิตแบบดั้งเดิม',scores:{Culture:2}},
+    ]
+  },
+  {
+    bg:'garden',   cssClass:'grad-garden',
+    badge:'🌿 บทที่ 6 — สวนลับริมทะเลสาบ',
+    story:'หลังจากผ่านวิหาร คุณพบสวนลับริมทะเลสาบ ผู้พิทักษ์เมืองถาม…',
+    question:'"เจ้ามาเยือนเมืองนี้เพื่อค้นหา หรือเพื่อพักใจ?"',
+    choices:[
+      {icon:'🌿',label:'นั่งชมวิวและใช้เวลาอย่างช้า ๆ',scores:{Relax:2}},
+      {icon:'🌱',label:'เดินสำรวจธรรมชาติและเรียนรู้การรักษาพื้นที่',scores:{Relax:2}},
+      {icon:'📸',label:'ถ่ายภาพบรรยากาศเก็บไว้',scores:{Photo:2}},
+      {icon:'🌏',label:'พูดคุยกับคนที่ดูแลสถานที่แห่งนี้',scores:{Culture:2}},
+    ]
+  },
+  {
+    bg:null,       cssClass:'grad-mission',
+    badge:'⚔️ บทที่ 7 — ภารกิจสุดท้าย',
+    story:'คืนสุดท้ายมาถึง เมืองมนตรามอบภารกิจสุดท้าย คุณต้องเลือก "ความทรงจำที่อยากนำกลับไป"',
+    question:'ความทรงจำใดที่คุณอยากนำกลับไปมากที่สุด?',
+    choices:[
+      {icon:'🍜',label:'สูตรอาหารลับของเมือง',scores:{Food:2}},
+      {icon:'📸',label:'ภาพถ่ายที่บันทึกช่วงเวลาพิเศษ',scores:{Photo:2}},
+      {icon:'🎨',label:'งานศิลปะที่สร้างแรงบันดาลใจ',scores:{Art:2}},
+      {icon:'🛍️',label:'ของที่ระลึกจากชุมชน',scores:{Shopping:2}},
+    ]
+  },
+  {
+    bg:null,       cssClass:'grad-door',
+    badge:'🚪 บทที่ 8 — ประตูสุดท้าย',
+    story:'ก่อนออกจากเมือง คุณพบประตูสุดท้าย ประตูนี้จะเปิดให้เฉพาะผู้ที่รู้ว่า "อะไรคือคุณค่าของการเดินทาง"',
+    question:'สิ่งที่ทำให้ทริปหนึ่งมีความหมายคือ…',
+    choices:[
+      {icon:'🍜',label:'ได้ค้นพบรสชาติใหม่',scores:{Food:2}},
+      {icon:'🏛️',label:'ได้เข้าใจอดีตของสถานที่',scores:{History:2}},
+      {icon:'🎨',label:'ได้แรงบันดาลใจใหม่',scores:{Art:2}},
+      {icon:'🌏',label:'ได้พบผู้คนและเรื่องราวใหม่',scores:{Culture:2}},
+    ]
+  },
+  {
+    bg:null,       cssClass:'grad-gate2',
+    badge:'📖 บทที่ 9 — บทสุดท้าย',
+    story:'ผู้พิทักษ์ถามว่า "เจ้าจะเล่าเรื่องเมืองนี้ให้ผู้อื่นฟังอย่างไร?"',
+    question:'คุณจะเล่าเรื่องสงขลาให้คนอื่นฟังอย่างไร?',
+    choices:[
+      {icon:'🍜',label:'เล่าถึงอาหารที่ไม่ควรพลาด',scores:{Food:2}},
+      {icon:'🏛️',label:'เล่าถึงประวัติศาสตร์และอาคารเก่า',scores:{History:2}},
+      {icon:'🎨',label:'เล่าถึงศิลปะและความงามของเมือง',scores:{Art:2}},
+      {icon:'🌏',label:'เล่าถึงผู้คนและวิถีชีวิต',scores:{Culture:2}},
+    ]
+  },
+  {
+    bg:null,       cssClass:'grad-final',
+    badge:'✨ บทที่ 10 — คำถามสุดท้าย',
+    story:'ก่อนกลับ ผู้พิทักษ์ถามคำถามสุดท้าย…',
+    question:'"สิ่งใดทำให้เจ้าจดจำเมืองนี้ไปตลอดกาล?"',
+    choices:[
+      {icon:'🍜',label:'รสชาติที่ได้สัมผัส',scores:{Food:2}},
+      {icon:'🏛️',label:'เรื่องราวที่ได้เรียนรู้',scores:{History:2}},
+      {icon:'📸',label:'ภาพความงามที่ได้เห็น',scores:{Photo:2}},
+      {icon:'🌿',label:'ความสงบและความรู้สึกดีที่ได้รับ',scores:{Relax:2}},
+    ]
+  },
+];
+
+/* ══════════════════════════════════════════════════════
+   PERSONA DATA
+══════════════════════════════════════════════════════ */
+const PERSONAS = {
+  Food:{
+    emoji:'🍜', name:'นักปรุงรสแห่งนคร',
+    desc:'คุณเป็นนักเดินทางที่ใช้รสชาติเป็นประตูสู่การค้นพบเมือง สำหรับคุณ อาหารไม่ได้เป็นเพียงสิ่งที่รับประทาน แต่เป็นเรื่องราวของผู้คน วัฒนธรรม และความทรงจำที่ถูกส่งต่อผ่านสูตรอาหาร\n\nคุณชอบค้นหาร้านลับ เมนูพื้นเมือง และประสบการณ์ที่ทำให้เข้าใจเมืองผ่านกลิ่น รส และบรรยากาศ',
+    routes:[
+      {icon:'🍮',name:'ต้นรักขนมไทย',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐'},
+      {icon:'🍜',name:'ก๋วยเตี๋ยวในรู @ นางงาม',dist:'ถนนนางงาม',eco:'Eco ⭐⭐⭐⭐'},
+      {icon:'☕',name:'เต้าคั่วป้าเอียด',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐'},
+      {icon:'🍗',name:'โรตีแกงไก่ในสวน @ บ้านในนคร',dist:'บ้านในนคร',eco:'Eco ⭐⭐⭐⭐'},
+    ],
+    reason:'เส้นทางนี้เหมาะกับคุณ เพราะเมืองเก่าสงขลาเป็นพื้นที่ที่อาหารสะท้อนการผสมผสานของวัฒนธรรมไทย จีน และมลายู การเดินทางผ่านอาหารจะทำให้คุณเข้าใจเรื่องราวของผู้คนและวิถีชีวิตผ่านรสชาติที่เป็นเอกลักษณ์',
+  },
+  History:{
+    emoji:'🏛️', name:'นักจารึกกาลเวลา',
+    desc:'คุณเป็นนักเดินทางที่ไม่ได้เพียงมองเห็นสถานที่ แต่ต้องการค้นหาความหมายที่ซ่อนอยู่ในทุกอาคาร ถนน และร่องรอยของผู้คนในอดีต\n\nคุณสนใจเรื่องราวเบื้องหลัง ชอบเรียนรู้ประวัติศาสตร์ สถาปัตยกรรม และอดีตที่ยังคงมีชีวิตอยู่ในเมือง',
+    routes:[
+      {icon:'🏠',name:'บ้านนครใน',dist:'ถนนนครใน',eco:'Eco ⭐⭐⭐⭐'},
+      {icon:'🏭',name:'โรงสีแดง',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐'},
+      {icon:'🏘️',name:'อาคารเก่าเมืองสงขลา',dist:'ถนนนครนอก',eco:'Eco ⭐⭐⭐⭐⭐'},
+      {icon:'☕',name:'คาเฟ่ในย่านเมืองเก่า',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐'},
+    ],
+    reason:'เส้นทางนี้เหมาะกับคุณ เพราะสถานที่เหล่านี้เป็นหลักฐานของความรุ่งเรืองในอดีต ทั้งด้านการค้า สถาปัตยกรรม และวิถีชีวิตของชาวสงขลา ช่วยให้คุณเรียนรู้เมืองผ่านเรื่องราวจริงจากสถานที่จริง',
+  },
+  Art:{
+    emoji:'🎨', name:'นักสร้างสรรค์มนตรา',
+    desc:'คุณเป็นนักเดินทางที่มองเห็นเมืองเป็นพื้นที่แห่งแรงบันดาลใจ คุณไม่ได้มองเพียงสถานที่ แต่เห็นสีสัน รูปแบบ ความคิดสร้างสรรค์ และเรื่องราวที่ถูกถ่ายทอดผ่านศิลปะ\n\nคุณชอบค้นหาความแปลกใหม่และแรงบันดาลใจจากสิ่งรอบตัว',
+    routes:[
+      {icon:'🖼️',name:'Street Art เมืองเก่าสงขลา',dist:'ทั่วเมืองเก่า',eco:'Eco ⭐⭐⭐⭐⭐'},
+      {icon:'🏛️',name:'หอศิลป์สงขลา',dist:'ใจกลางเมือง',eco:'Eco ⭐⭐⭐⭐'},
+    ],
+    reason:'เส้นทางนี้เหมาะกับคุณ เพราะเมืองเก่าสงขลาเต็มไปด้วยงานศิลปะร่วมสมัยที่ผสมผสานกับสถาปัตยกรรมเก่า ทำให้เห็นการเชื่อมโยงระหว่างอดีตและความคิดสร้างสรรค์ของคนรุ่นใหม่',
+  },
+  Photo:{
+    emoji:'📸', name:'นักสะสมภาพมนตรา',
+    desc:'คุณเป็นนักเดินทางที่เก็บเกี่ยวความทรงจำผ่านภาพถ่าย คุณมองเห็นรายละเอียดเล็ก ๆ ที่คนอื่นอาจมองข้าม เช่น สีของอาคาร แสงเงาบนถนน หรือบรรยากาศของผู้คน\n\nสำหรับคุณ ทุกมุมของเมืองคือภาพหนึ่งในสมุดบันทึกการเดินทาง',
+    routes:[
+      {icon:'📷',name:'ถนนนครนอก',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐⭐'},
+      {icon:'📷',name:'ถนนนครใน',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐⭐'},
+      {icon:'📷',name:'ถนนนางงาม',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐'},
+      {icon:'🏛️',name:'จุดถ่ายภาพอาคารเก่า',dist:'รอบเมืองเก่า',eco:'Eco ⭐⭐⭐⭐'},
+    ],
+    reason:'เส้นทางนี้เหมาะกับคุณ เพราะย่านเมืองเก่าสงขลามีเอกลักษณ์ด้านสถาปัตยกรรม สีสันของอาคาร และบรรยากาศแบบดั้งเดิม เหมาะสำหรับการบันทึกภาพและสร้างความทรงจำ',
+  },
+  Culture:{
+    emoji:'🌏', name:'นักเชื่อมโยงวิถี',
+    desc:'คุณเป็นนักเดินทางที่ให้ความสำคัญกับผู้คนและวัฒนธรรม คุณสนใจวิถีชีวิต ประเพณี และการเชื่อมต่อกับชุมชนท้องถิ่นมากกว่าสถานที่ท่องเที่ยวทั่วไป\n\nคุณเชื่อว่าการเดินทางที่ดีที่สุดคือการได้ "ใช้ชีวิต" ในเมืองนั้น ไม่ใช่แค่ "มาเยือน"',
+    routes:[
+      {icon:'🌏',name:'ชุมชนเมืองเก่าสงขลา',dist:'ทั่วเมืองเก่า',eco:'Eco ⭐⭐⭐⭐⭐'},
+      {icon:'🎪',name:'ตลาดชุมชนท้องถิ่น',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐'},
+      {icon:'🍜',name:'อาหารตามสั่งท้องถิ่น',dist:'ย่านชุมชน',eco:'Eco ⭐⭐⭐⭐'},
+    ],
+    reason:'เส้นทางนี้เหมาะกับคุณ เพราะสงขลาเป็นเมืองพหุวัฒนธรรมที่ผู้คนหลายเชื้อชาติอยู่ร่วมกัน การเดินทางผ่านชุมชนและผู้คนจะทำให้คุณเข้าใจเมืองในมิติที่ลึกกว่าการท่องเที่ยวทั่วไป',
+  },
+  Faith:{
+    emoji:'⛩️', name:'นักเดินทางแห่งศรัทธา',
+    desc:'คุณเป็นนักเดินทางที่ค้นหาความหมาย ความสงบ และเรื่องราวทางจิตใจ\n\nคุณสนใจความเชื่อ ประเพณี และสถานที่ที่สะท้อนความผูกพันของผู้คนกับศาสนาและวัฒนธรรม',
+    routes:[
+      {icon:'⛩️',name:'ศาลเจ้าพ่อหลักเมืองสงขลา',dist:'ใจกลางเมือง',eco:'Eco ⭐⭐⭐⭐'},
+      {icon:'🛕',name:'พระแม่ลักษมี',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐⭐'},
+    ],
+    reason:'เส้นทางนี้เหมาะกับคุณ เพราะสงขลาเป็นเมืองพหุวัฒนธรรมที่มีศาสนสถานหลากหลาย สะท้อนความเชื่อที่อยู่ร่วมกันมายาวนาน ทำให้คุณค้นพบความงามทางจิตวิญญาณของเมือง',
+  },
+  Shopping:{
+    emoji:'🛍️', name:'นักสะสมความทรงจำ',
+    desc:'คุณเป็นนักเดินทางที่ชอบเก็บเรื่องราวของสถานที่ผ่านสิ่งของ ต้องการนำเอกลักษณ์กลับบ้าน\n\nสำหรับคุณ ของฝากไม่ใช่แค่ของ แต่คือบันทึกความทรงจำที่จับต้องได้',
+    routes:[
+      {icon:'🏪',name:'บ้านอ้ายเหลียน',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐'},
+      {icon:'🎨',name:'สงขลาบาติก',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐⭐'},
+      {icon:'🛍️',name:'ร้านดาษดื่น',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐'},
+    ],
+    reason:'เส้นทางนี้เหมาะกับคุณ เพราะสินค้าชุมชนและงานฝีมือช่วยถ่ายทอดเอกลักษณ์ของสงขลา ทำให้นักท่องเที่ยวมีสิ่งแทนความทรงจำที่มีคุณค่าและยั่งยืน',
+  },
+  Relax:{
+    emoji:'🌿', name:'นักพักใจแห่งเมือง',
+    desc:'คุณเป็นนักเดินทางที่เดินทางเพื่อพักผ่อน ชอบความสงบ ไม่เร่งรีบ ต้องการสัมผัสบรรยากาศ\n\nสำหรับคุณ การท่องเที่ยวที่ดีที่สุดคือการได้ "หายใจ" และรู้สึกถึงพลังของสถานที่อย่างช้า ๆ',
+    routes:[
+      {icon:'🌊',name:'ริมทะเลสาบสงขลา',dist:'ทะเลสาบสงขลา',eco:'Eco ⭐⭐⭐⭐⭐'},
+      {icon:'🌿',name:'พื้นที่สีเขียวริมทะเลสาบ',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐⭐'},
+      {icon:'☕',name:'คาเฟ่บรรยากาศดีเมืองเก่า',dist:'เมืองเก่า',eco:'Eco ⭐⭐⭐⭐'},
+    ],
+    reason:'เส้นทางนี้เหมาะกับคุณ เพราะพื้นที่ริมทะเลสาบและบรรยากาศเมืองเก่าช่วยสร้างประสบการณ์การพักผ่อนและการเดินทางแบบ Slow Life ที่ทำให้จิตใจผ่อนคลายและรู้สึกเป็นส่วนหนึ่งของธรรมชาติ',
+  },
+};
+
+const SCORE_LABELS = {
+  Food:'🍜 อาหาร',History:'🏛️ ประวัติ',Art:'🎨 ศิลปะ',
+  Photo:'📸 ภาพถ่าย',Culture:'🌏 วัฒนธรรม',Faith:'⛩️ ศรัทธา',
+  Shopping:'🛍️ ช้อปปิ้ง',Relax:'🌿 พักผ่อน'
+};
+
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+let currentQ = 0;
+let scores = {Food:0,History:0,Art:0,Photo:0,Culture:0,Faith:0,Shopping:0,Relax:0};
+let answers = [];
+let locked = false;
+let soundOn = false;
+let twTimer = null;
+const BG_BASE = 'assets/';
+const BG_MAP = {gate:'scene_gate.jpg',oldtown:'scene_oldtown.jpg',guardian:'scene_guardian.jpg',market:'scene_market.jpg',sunset:'scene_sunset.jpg',garden:'scene_garden.jpg'};
+
+/* ══════════════════════════════════════════════════════
+   PARTICLES
+══════════════════════════════════════════════════════ */
+function spawnParticles(){
+  const container = document.getElementById('particles');
+  container.innerHTML = '';
+  const colors = ['#4CAF88','#E8B04A','#DDF7EA','#ffffff','#7C3AED'];
+  for(let i=0;i<18;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random()*6+3;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${Math.random()*12+8}s;
+      animation-delay:${Math.random()*8}s;
+      opacity:0.5;
+    `;
+    container.appendChild(p);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   SCENE BACKGROUND
+══════════════════════════════════════════════════════ */
+function setScene(sceneData, instant=false){
+  const bg = document.getElementById('sceneBg');
+  const css = document.getElementById('sceneCss');
+  const dur = instant ? '0s' : '0.7s';
+  bg.style.transition = `opacity ${dur} ease`;
+  css.style.transition = `opacity ${dur} ease`;
+  bg.style.opacity = '0';
+  css.style.opacity = '0';
+  setTimeout(()=>{
+    if(sceneData.bg && BG_MAP[sceneData.bg]){
+      bg.style.backgroundImage = `url('${BG_BASE}${BG_MAP[sceneData.bg]}')`;
+      bg.style.opacity = '1';
+      css.style.opacity = '0';
+    } else {
+      bg.style.backgroundImage = 'none';
+      css.className = `scene-css ${sceneData.cssClass||''}`;
+      css.style.opacity = '1';
+    }
+  }, instant ? 0 : 350);
+}
+
+/* ══════════════════════════════════════════════════════
+   TYPEWRITER
+══════════════════════════════════════════════════════ */
+function typewrite(el, text, speed=22, cb){
+  if(twTimer) clearTimeout(twTimer);
+  el.innerHTML = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  el.appendChild(cursor);
+  let i = 0;
+  function tick(){
+    if(i < text.length){
+      const charNode = document.createTextNode(text[i]);
+      el.insertBefore(charNode, cursor);
+      i++;
+      // skip newlines
+      const delay = text[i-1]==='\n' ? 0 : speed;
+      twTimer = setTimeout(tick, delay);
+    } else {
+      cursor.remove();
+      if(cb) cb();
+    }
+  }
+  tick();
+}
+
+/* ══════════════════════════════════════════════════════
+   PROGRESS
+══════════════════════════════════════════════════════ */
+function updateProgress(q){
+  const pct = (q/SCENES.length)*100;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = `ด่าน ${q} / ${SCENES.length}`;
+  const track = document.querySelector('.progress-bar-track');
+  track.setAttribute('aria-valuenow', Math.round(pct));
+}
+
+/* ══════════════════════════════════════════════════════
+   RENDER QUESTION
+══════════════════════════════════════════════════════ */
+function renderQuestion(idx, animate=true){
+  const scene = SCENES[idx];
+  locked = false;
+
+  setScene(scene, idx===0);
+  updateProgress(idx+1);
+
+  const storyCard = document.getElementById('storyCard');
+  const storyText = document.getElementById('storyText');
+  const questionTitle = document.getElementById('questionTitle');
+  const choicesGrid = document.getElementById('choicesGrid');
+  const sceneBadge = document.getElementById('sceneBadge');
+
+  // Clear any inline styles set during choice click transition
+  storyCard.style.transform = '';
+  storyCard.style.opacity = '';
+  storyCard.style.transition = '';
+
+  // Card animation
+  if(animate){
+    storyCard.classList.remove('visible');
+    // Force browser reflow to restart transition
+    void storyCard.offsetWidth;
+    storyCard.classList.add('visible');
+  } else {
+    storyCard.classList.add('visible');
+  }
+
+  // Badge
+  sceneBadge.textContent = scene.badge;
+
+  // Story text typewriter
+  questionTitle.textContent = '';
+  choicesGrid.innerHTML = '';
+  typewrite(storyText, scene.story, 18, ()=>{
+    questionTitle.textContent = scene.question;
+    renderChoices(scene.choices);
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   RENDER CHOICES
+══════════════════════════════════════════════════════ */
+function renderChoices(choices){
+  const grid = document.getElementById('choicesGrid');
+  grid.innerHTML = '';
+  choices.forEach((c, i)=>{
+    const card = document.createElement('button');
+    card.className = 'choice-card';
+    card.setAttribute('aria-label', `ตัวเลือก: ${c.label}`);
+    card.innerHTML = `<span class="choice-icon" aria-hidden="true">${c.icon}</span><span class="choice-label">${c.label}</span>`;
+    card.addEventListener('click', (e)=> onChoiceClick(e, card, c.scores));
+    grid.appendChild(card);
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   CHOICE CLICK
+══════════════════════════════════════════════════════ */
+function onChoiceClick(e, card, scoreMap){
+  if(locked) return;
+  locked = true;
+
+  // Ripple
+  const rect = card.getBoundingClientRect();
+  const rip = document.createElement('div');
+  rip.className = 'choice-ripple';
+  const sz = Math.max(rect.width, rect.height)*1.5;
+  rip.style.cssText = `width:${sz}px;height:${sz}px;left:${e.clientX-rect.left-sz/2}px;top:${e.clientY-rect.top-sz/2}px`;
+  card.appendChild(rip);
+
+  // Mark selected & lock others
+  card.classList.add('selected');
+  document.querySelectorAll('.choice-card').forEach(c=>{
+    c.classList.add('locked');
+    c.setAttribute('disabled','');
+  });
+
+  // Add scores
+  Object.entries(scoreMap).forEach(([k,v])=>{ scores[k] = (scores[k]||0)+v; });
+  answers.push({q:currentQ, scores:scoreMap});
+
+  // Progress ripple on bar
+  const fill = document.getElementById('progressFill');
+  fill.style.boxShadow = '0 0 20px rgba(76,175,136,1)';
+  setTimeout(()=>{ fill.style.boxShadow = ''; }, 600);
+
+  // Next scene delay
+  setTimeout(()=>{
+    currentQ++;
+    if(currentQ < SCENES.length){
+      const storyCard = document.getElementById('storyCard');
+      storyCard.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+      storyCard.style.transform = 'translateY(-20px)';
+      storyCard.style.opacity = '0';
+      setTimeout(()=>{ renderQuestion(currentQ); }, 420);
+    } else {
+      showLoading();
+    }
+  }, 700);
+}
+
+/* ══════════════════════════════════════════════════════
+   SHOW / HIDE SCREENS
+══════════════════════════════════════════════════════ */
+function show(id){ document.getElementById(id).style.display='flex'; }
+function hide(id){ document.getElementById(id).style.display='none'; }
+
+/* ══════════════════════════════════════════════════════
+   START QUIZ
+══════════════════════════════════════════════════════ */
+function startQuiz(){
+  scores = {Food:0,History:0,Art:0,Photo:0,Culture:0,Faith:0,Shopping:0,Relax:0};
+  answers = [];
+  currentQ = 0;
+  locked = false;
+
+  const introEl = document.getElementById('introScreen');
+  introEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+  introEl.style.opacity = '0';
+  introEl.style.transform = 'translateY(-20px)';
+
+  setTimeout(()=>{
+    hide('introScreen');
+    show('questionScreen');
+    document.getElementById('progressWrap').style.display = 'flex';
+    document.getElementById('backBtn').classList.add('show');
+    document.getElementById('questionScreen').classList.add('screen-enter');
+    renderQuestion(0);
+    spawnParticles();
+  }, 400);
+}
+
+/* ══════════════════════════════════════════════════════
+   LOADING SCREEN
+══════════════════════════════════════════════════════ */
+const LOADING_MESSAGES = [
+  'กำลังค้นหาวิญญาณนักเดินทางของคุณ...',
+  'กำลังปลุกพลังมนตราแห่งสงขลา...',
+  'กำลังเปิดคัมภีร์นักเดินทาง...',
+  'กำลังวิเคราะห์บุคลิกนักเดินทาง...',
+];
+let loadingMsgIdx = 0;
+let loadingTimer = null;
+
+function showLoading(){
+  hide('questionScreen');
+  document.getElementById('backBtn').classList.remove('show');
+  document.getElementById('progressWrap').style.display = 'none';
+
+  // CSS background for loading — dark mystical
+  const css = document.getElementById('sceneCss');
+  document.getElementById('sceneBg').style.opacity = '0';
+  css.className = 'scene-css grad-final';
+  css.style.opacity = '1';
+
+  show('loadingScreen');
+  document.getElementById('loadingScreen').classList.add('screen-enter');
+
+  loadingMsgIdx = 0;
+  const ltEl = document.getElementById('loadingText');
+  ltEl.textContent = LOADING_MESSAGES[0];
+  loadingTimer = setInterval(()=>{
+    loadingMsgIdx = (loadingMsgIdx+1) % LOADING_MESSAGES.length;
+    ltEl.style.opacity = '0';
+    setTimeout(()=>{
+      ltEl.textContent = LOADING_MESSAGES[loadingMsgIdx];
+      ltEl.style.opacity = '1';
+      ltEl.style.transition = 'opacity 0.5s';
+    }, 300);
+  }, 1200);
+
+  setTimeout(()=>{
+    clearInterval(loadingTimer);
+    showResults();
+  }, 3200);
+}
+
+/* ══════════════════════════════════════════════════════
+   RESULTS
+══════════════════════════════════════════════════════ */
+function showResults(){
+  hide('loadingScreen');
+
+  // Calculate
+  const entries = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const [topKey, topScore] = entries[0];
+  const [secKey, secScore] = entries[1];
+  const persona = PERSONAS[topKey];
+  const secPersona = PERSONAS[secKey];
+
+  // Scene
+  const css = document.getElementById('sceneCss');
+  css.className = 'scene-css grad-oldtown';
+
+  show('resultScreen');
+  document.getElementById('resultScreen').classList.add('screen-enter');
+  document.getElementById('backBtn').classList.remove('show');
+
+  // Hero
+  const isMixed = Math.abs(topScore - secScore) <= 2;
+  document.getElementById('resultEmoji').textContent = persona.emoji;
+  document.getElementById('resultName').textContent = persona.name;
+  if (isMixed) {
+    document.getElementById('resultTagline').innerHTML = `✨ <strong>นักเดินทางแบบผสม (Mixed Traveler)</strong><br/>ด้วยคะแนนที่ใกล้เคียงกันระหว่างหลักและรอง!`;
+  } else {
+    document.getElementById('resultTagline').textContent = `บุคลิกนักเดินทางหลักของคุณ`;
+  }
+
+  // Persona desc
+  document.getElementById('personaDesc').textContent = persona.desc;
+
+  // Secondary
+  document.getElementById('secondaryBadge').innerHTML = `${secPersona.emoji} บุคลิกรอง: <strong>${secPersona.name}</strong> (${secScore} คะแนน)`;
+
+  // Score bars
+  const maxScore = Math.max(...Object.values(scores)) || 1;
+  const scoreList = document.getElementById('scoreList');
+  scoreList.innerHTML = '';
+  entries.forEach(([key, val], i)=>{
+    const row = document.createElement('div');
+    row.className = 'score-row';
+    const pct = Math.round((val/maxScore)*100);
+    row.innerHTML = `
+      <span class="score-name">${SCORE_LABELS[key]||key}</span>
+      <div class="score-track"><div class="score-fill${i===0?' gold':''}" data-pct="${pct}"></div></div>
+      <span class="score-num">${val}</span>
+    `;
+    scoreList.appendChild(row);
+  });
+  // Animate bars
+  setTimeout(()=>{
+    document.querySelectorAll('.score-fill').forEach(el=>{
+      el.style.width = el.dataset.pct+'%';
+    });
+  }, 600);
+
+  // Routes
+  const routeList = document.getElementById('routeList');
+  routeList.innerHTML = '';
+  persona.routes.forEach(r=>{
+    const item = document.createElement('div');
+    item.className = 'route-item';
+    item.innerHTML = `
+      <div class="route-icon">${r.icon}</div>
+      <div class="route-info">
+        <div class="route-name">${r.name}</div>
+        <div class="route-meta">
+          📍 ${r.dist}
+          <span class="eco-badge">${r.eco}</span>
+        </div>
+      </div>
+      <span style="font-size:16px;color:#ccc">›</span>
+    `;
+    routeList.appendChild(item);
+  });
+
+  // Reason
+  document.getElementById('reasonText').textContent = persona.reason;
+}
+
+/* ══════════════════════════════════════════════════════
+   PAGE TRANSITION
+══════════════════════════════════════════════════════ */
+function navigateTo(url){
+  document.getElementById('app').style.transition = 'opacity 0.4s ease';
+  document.getElementById('app').style.opacity = '0';
+  setTimeout(()=>{ window.location.href = url; }, 420);
+}
+
+/* ══════════════════════════════════════════════════════
+   SOUND (ambient)
+══════════════════════════════════════════════════════ */
+let audioCtx = null;
+let ambientNode = null;
+function toggleSound(){
+  soundOn = !soundOn;
+  document.getElementById('soundBtn').textContent = soundOn ? '🔊' : '🔇';
+  const ind = document.getElementById('soundIndicator');
+  ind.textContent = soundOn ? '🔊 เสียงเปิด' : '🔇 เสียงปิด';
+  ind.style.opacity = '1';
+  setTimeout(()=>{ ind.style.opacity = '0'; }, 1500);
+
+  if(soundOn){
+    try{
+      if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      // Simple ambient tone
+      ambientNode = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      ambientNode.type = 'sine';
+      ambientNode.frequency.value = 180;
+      gain.gain.value = 0.04;
+      ambientNode.connect(gain);
+      gain.connect(audioCtx.destination);
+      ambientNode.start();
+    }catch(e){}
+  } else {
+    if(ambientNode){ try{ ambientNode.stop(); }catch(e){} ambientNode=null; }
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   BACK BUTTON
+══════════════════════════════════════════════════════ */
+function goBack(){
+  if(currentQ > 0 && currentQ < SCENES.length){
+    currentQ--;
+    // Undo last score
+    if(answers.length > 0){
+      const last = answers.pop();
+      Object.entries(last.scores).forEach(([k,v])=>{ scores[k] = Math.max(0,(scores[k]||0)-v); });
+    }
+    locked = false;
+    renderQuestion(currentQ, true);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Set intro background
+  const css = document.getElementById('sceneCss');
+  css.className = 'scene-css grad-gate';
+  css.style.opacity = '1';
+  spawnParticles();
+
+  document.getElementById('startBtn').addEventListener('click', startQuiz);
+  document.getElementById('backBtn').addEventListener('click', goBack);
+  document.getElementById('soundBtn').addEventListener('click', toggleSound);
+
+  document.getElementById('ctaBtn').addEventListener('click', ()=>{
+    // Save result to localStorage for home page personalization
+    const entries = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+    const [topKey] = entries[0];
+    localStorage.setItem('gs_persona', topKey);
+    localStorage.setItem('gs_scores', JSON.stringify(scores));
+    navigateTo('index.html');
+  });
+
+  document.getElementById('retryBtn').addEventListener('click', ()=>{
+    hide('resultScreen');
+    document.getElementById('progressWrap').style.display = 'none';
+    // Reset
+    scores = {Food:0,History:0,Art:0,Photo:0,Culture:0,Faith:0,Shopping:0,Relax:0};
+    answers = [];
+    currentQ = 0;
+    // Back to intro
+    const css = document.getElementById('sceneCss');
+    css.className = 'scene-css grad-gate';
+    css.style.opacity = '1';
+    document.getElementById('sceneBg').style.opacity = '0';
+    const intro = document.getElementById('introScreen');
+    intro.style.opacity = '0';
+    intro.style.transform = 'translateY(20px)';
+    show('introScreen');
+    setTimeout(()=>{
+      intro.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      intro.style.opacity = '1';
+      intro.style.transform = 'translateY(0)';
+    }, 50);
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape') goBack();
+    if(['1','2','3','4'].includes(e.key) && !locked && document.getElementById('questionScreen').style.display !== 'none'){
+      const cards = document.querySelectorAll('.choice-card:not(.locked)');
+      const idx = parseInt(e.key) - 1;
+      if(cards[idx]) cards[idx].click();
+    }
+  });
+});
+</script>
+</body>
+</html>

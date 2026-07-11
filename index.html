@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>เยาวชวน สงขลา — ค้นพบเมืองเก่าในแบบของคุณ</title>
+  <meta name="description" content="แพลตฟอร์มท่องเที่ยวเมืองเก่าสงขลา ชวนชิม ชวนเที่ยว ชวนใช้ ชวนทำ และชวนวางแผนทริปอย่างยั่งยืน"/>
+  <meta name="theme-color" content="#4CAF88"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════ */
+:root {
+  --primary:#4CAF88; --primary-d:#3d9e79; --primary-dd:#2E7D5A;
+  --primary-l:#DDF7EA; --primary-pl:#f0fdf6;
+  --accent:#4FC3F7; --accent-d:#0288d1;
+  --forest:#2E7D32;
+  --gold:#F9A825; --platinum:#78909C;
+  --bg:#FFFFFF; --bg2:#f8fdfb; --bg3:#f0fdf6;
+  --card:#FFFFFF; --card-border:rgba(76,175,136,0.12);
+  --text:#2D2D2D; --text2:#555E57; --text3:#8fa394;
+  --border:#E8F5EC;
+  --shadow-xs:0 1px 4px rgba(0,0,0,0.06);
+  --shadow-sm:0 2px 12px rgba(76,175,136,0.08);
+  --shadow-md:0 6px 24px rgba(76,175,136,0.13);
+  --shadow-lg:0 12px 40px rgba(76,175,136,0.18);
+  --r-sm:12px; --r-md:18px; --r-lg:24px; --r-xl:32px;
+  --nav-h:68px; --header-h:60px;
+  --t:0.28s cubic-bezier(0.4,0,0.2,1);
+  --font:'Prompt','Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0f1a14; --bg2:#141f17; --bg3:#1a2820;
+    --card:#1e2d23; --card-border:rgba(76,175,136,0.18);
+    --text:#e8f5ec; --text2:#a8c5b0; --text3:#5a7a62;
+    --border:#2a3d2f; --shadow-sm:0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:0 6px 24px rgba(0,0,0,0.35); --shadow-lg:0 12px 40px rgba(0,0,0,0.4);
+  }
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;
+  overflow-x:hidden;overscroll-behavior:none;}
+img{display:block;max-width:100%;object-fit:cover;}
+button,a{font-family:var(--font);cursor:pointer;text-decoration:none;}
+button{background:none;border:none;}
+ul{list-style:none;}
+input,textarea{font-family:var(--font);}
+
+/* ═══════════════════════════════════════
+   TRANSITIONS & PAGE OVERLAY
+═══════════════════════════════════════ */
+#pageOverlay{
+  position:fixed;inset:0;background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s ease;
+}
+#pageOverlay.active{opacity:1;pointer-events:all;}
+
+/* ═══════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════ */
+#app{display:flex;flex-direction:column;min-height:100vh;}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+#header{
+  position:sticky;top:0;z-index:200;height:var(--header-h);
+  background:rgba(255,255,255,0.88);backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;gap:12px;
+}
+@media (prefers-color-scheme:dark){
+  #header{background:rgba(15,26,20,0.9);}
+}
+.hdr-logo{display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;}
+.hdr-logo-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.hdr-logo-icon svg{width:18px;height:18px;}
+.hdr-brand{font-size:17px;font-weight:700;color:var(--primary-dd);}
+.hdr-greeting{flex:1;font-size:13px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px;}
+.hdr-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.hdr-icon-btn{
+  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:var(--text2);transition:background var(--t),color var(--t);position:relative;
+}
+.hdr-icon-btn:hover,.hdr-icon-btn:active{background:var(--primary-l);color:var(--primary);}
+.hdr-icon-btn svg{width:20px;height:20px;}
+.hdr-notif-badge{
+  position:absolute;top:4px;right:4px;width:8px;height:8px;background:#e53935;
+  border-radius:50%;border:2px solid var(--bg);
+}
+.hdr-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;
+  border:2px solid var(--primary-l);transition:transform var(--t);
+}
+.hdr-avatar:hover{transform:scale(1.08);}
+
+/* ═══════════════════════════════════════
+   SEARCH OVERLAY
+═══════════════════════════════════════ */
+#searchOverlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:opacity var(--t);
+  display:flex;flex-direction:column;align-items:stretch;padding:60px 16px 16px;
+}
+#searchOverlay.open{opacity:1;pointer-events:all;}
+.search-box-wrap{
+  background:var(--card);border-radius:var(--r-lg);
+  padding:16px;box-shadow:var(--shadow-lg);
+  display:flex;flex-direction:column;gap:12px;max-height:80vh;overflow:hidden;
+}
+.search-input-row{display:flex;align-items:center;gap:10px;}
+.search-input-row svg{width:20px;height:20px;color:var(--primary);flex-shrink:0;}
+#searchInput{
+  flex:1;font-size:15px;font-weight:500;color:var(--text);background:none;
+  border:none;outline:none;
+}
+#searchInput::placeholder{color:var(--text3);}
+.search-close-btn{
+  width:32px;height:32px;border-radius:50%;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  color:var(--text2);
+}
+.search-close-btn svg{width:16px;height:16px;}
+#searchResults{overflow-y:auto;display:flex;flex-direction:column;gap:8px;max-height:55vh;}
+.search-result-item{
+  display:flex;align-items:center;gap:12px;padding:10px;
+  border-radius:var(--r-md);cursor:pointer;transition:background var(--t);
+}
+.search-result-item:hover,.search-result-item:active{background:var(--primary-pl);}
+.search-result-img{width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--bg3);}
+.search-result-info{flex:1;min-width:0;}
+.search-result-name{font-size:13.5px;font-weight:600;color:var(--text);}
+.search-result-type{font-size:11px;color:var(--text3);margin-top:2px;}
+.search-empty{text-align:center;padding:24px;color:var(--text3);font-size:13px;}
+
+/* ═══════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════ */
+#mainContent{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+  scroll-behavior:smooth;
+}
+.view{display:none;animation:fadeSlideIn .3s ease;}
+.view.active{display:block;}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* ═══════════════════════════════════════
+   HERO CAROUSEL
+═══════════════════════════════════════ */
+.hero-wrap{position:relative;height:240px;overflow:hidden;border-radius:0;}
+.hero-slide{
+  position:absolute;inset:0;transition:opacity .6s ease,transform .6s ease;
+  opacity:0;transform:scale(1.04);
+}
+.hero-slide.active{opacity:1;transform:scale(1);}
+.hero-img{width:100%;height:100%;object-fit:cover;}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 55%);
+}
+.hero-content{
+  position:absolute;bottom:0;left:0;right:0;padding:20px 20px 60px;
+}
+.hero-title{font-size:20px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:4px;}
+.hero-sub{font-size:13px;color:rgba(255,255,255,0.82);margin-bottom:14px;}
+.hero-btns{display:flex;gap:10px;}
+.hero-btn{
+  padding:9px 18px;border-radius:50px;font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:6px;
+}
+.hero-btn-primary{background:#4CAF88;color:#fff;box-shadow:0 4px 16px rgba(76,175,136,0.4);}
+.hero-btn-ghost{background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.55);color:#fff;backdrop-filter:blur(8px);}
+.hero-dots{
+  position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;
+}
+.hero-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.45);
+  transition:all .3s ease;cursor:pointer;
+}
+.hero-dot.active{width:18px;border-radius:3px;background:#fff;}
+
+/* ═══════════════════════════════════════
+   SECTION SHARED
+═══════════════════════════════════════ */
+.section{padding:20px 16px 0;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.section-title{font-size:17px;font-weight:700;color:var(--text);}
+.section-link{font-size:12.5px;font-weight:600;color:var(--primary);padding:4px 8px;border-radius:8px;transition:background var(--t);}
+.section-link:hover{background:var(--primary-l);}
+
+/* ═══════════════════════════════════════
+   QUICK MENU GRID
+═══════════════════════════════════════ */
+.menu-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  padding:20px 16px;
+}
+.menu-card{
+  background:var(--card);border-radius:var(--r-md);
+  border:1px solid var(--card-border);box-shadow:var(--shadow-xs);
+  padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;transition:transform var(--t),box-shadow var(--t),background var(--t);
+  position:relative;overflow:hidden;
+}
+.menu-card:hover,.menu-card:active{transform:scale(0.96);box-shadow:var(--shadow-md);}
+.menu-card-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.menu-card-label{font-size:13px;font-weight:600;color:var(--text);text-align:center;}
+.menu-card-sub{font-size:11px;color:var(--text3);text-align:center;}
+.mc-chiim .menu-card-icon{background:linear-gradient(135deg,#fff3e0,#ffe0b2);}
+.mc-thiao .menu-card-icon{background:linear-gradient(135deg,#e3f2fd,#bbdefb);}
+.mc-chai .menu-card-icon{background:linear-gradient(135deg,#f3e5f5,#e1bee7);}
+.mc-tham .menu-card-icon{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);}
+.mc-plan .menu-card-icon{background:linear-gradient(135deg,#e0f7fa,#b2ebf2);}
+.mc-profile .menu-card-icon{background:linear-gradient(135deg,#fce4ec,#f8bbd0);}
+
+/* ═══════════════════════════════════════
+   AI RECOMMENDATION SCROLL
+═══════════════════════════════════════ */
+.persona-banner{
+  margin:0 16px;border-radius:var(--r-lg);
+  background:linear-gradient(135deg,#4CAF88 0%,#2E7D5A 100%);
+  padding:16px 20px;display:flex;align-items:center;gap:14px;
+  box-shadow:var(--shadow-md);
+}
+.persona-icon{font-size:32px;flex-shrink:0;}
+.persona-info .persona-type{font-size:12px;font-weight:500;color:rgba(255,255,255,0.75);}
+.persona-info .persona-name{font-size:15px;font-weight:700;color:#fff;margin:2px 0;}
+.persona-info .persona-desc{font-size:12px;color:rgba(255,255,255,0.8);}
+
+.h-scroll-wrap{
+  display:flex;gap:12px;overflow-x:auto;padding:4px 16px 12px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+}
+.h-scroll-wrap::-webkit-scrollbar{display:none;}
+
+.rec-card{
+  background:var(--card);border-radius:var(--r-md);border:1px solid var(--card-border);
+  box-shadow:var(--shadow-sm);overflow:hidden;flex-shrink:0;width:180px;
+  scroll-snap-align:start;cursor:pointer;transition:transform var(--t),box-shadow var(--t);
+}
+.rec-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.rec-card-img{height:110px;width:100%;background:var(--bg3);position:relative;overflow:hidden;}
+.rec-card-img img{width:100%;height:100%;object-fit:cover;}
+.rec-card-body{padding:10px;}
+.rec-card-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3;}
+.rec-card-type{font-size:11px;color:var(--text3);margin-top:2px;}
+.eco-badge{
+  position:absolute;top:8px;right:8px;padding:3px 8px;border-radius:20px;
+  font-size:10px;font-weight:700;letter-spacing:.3px;
+}
+.eco-green{background:#4CAF88;color:#fff;}
+.eco-gold{background:#F9A825;color:#fff;}
+.eco-platinum{background:#78909C;color:#fff;}
+
+/* ═══════════════════════════════════════
+   PILL FILTER
+═══════════════════════════════════════ */
+.pill-wrap{
+  display:flex;gap:8px;overflow-x:auto;padding:4px 16px 12px;
+  scroll-snap-type:x mandatory;
+}
+.pill-wrap::-webkit-scrollbar{display:none;}
+.pill{
+  padding:8px 16px;border-radius:50px;font-size:13px;font-weight:600;
+  white-space:nowrap;flex-shrink:0;cursor:pointer;
+  border:1.5px solid var(--border);color:var(--text2);background:var(--card);
+  transition:all var(--t);
+}
+.pill.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.pill:hover:not(.active){background:var(--primary-l);border-color:var(--primary);color:var(--primary);}
+
+/* ═══════════════════════════════════════
+   RICH RESTAURANT / ATTRACTION / SHOP CARDS
+═══════════════════════════════════════ */
+.content-list{display:flex;flex-direction:column;gap:14px;padding:0 16px 20px;}
+.content-card{
+  background:var(--card);border-radius:var(--r-lg);border:1px solid var(--card-border);
+  box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;
+  transition:transform var(--t),box-shadow var(--t);
+}
+.content-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.content-card-img{height:180px;position:relative;overflow:hidden;background:var(--bg3);}
+.content-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+.content-card:hover .content-card-img img{transform:scale(1.04);}
+.content-card-body{padding:14px;}
+.content-card-row1{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;}
+.content-card-name{font-size:16px;font-weight:700;color:var(--text);}
+.rating-row{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.stars{color:#F9A825;font-size:12px;}
+.rating-num{font-size:12px;font-weight:600;color:var(--text2);}
+.content-card-tag{font-size:12px;color:var(--primary);font-weight:600;margin-bottom:4px;}
+.content-card-desc{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:10px;}
+.content-card-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.meta-chip{
+  display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--text3);
+  background:var(--bg3);padding:4px 10px;border-radius:20px;
+}
+.meta-chip svg{width:12px;height:12px;flex-shrink:0;}
+.content-card-actions{display:flex;gap:8px;}
+.btn-maps{
+  display:flex;align-items:center;gap:5px;padding:9px 14px;border-radius:50px;
+  font-size:12.5px;font-weight:600;color:var(--primary);
+  border:1.5px solid var(--primary);background:transparent;
+  transition:all var(--t);flex-shrink:0;
+}
+.btn-maps:hover{background:var(--primary-l);}
+.btn-maps svg{width:14px;height:14px;}
+.btn-detail{
+  flex:1;padding:9px 14px;border-radius:50px;
+  font-size:12.5px;font-weight:600;color:#fff;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  border:none;text-align:center;transition:all var(--t);
+  box-shadow:0 4px 12px rgba(76,175,136,0.3);
+}
+.btn-detail:hover{transform:scale(1.03);box-shadow:0 6px 18px rgba(76,175,136,0.4);}
+
+/* ═══════════════════════════════════════
+   MISSION CARDS
+═══════════════════════════════════════ */
+.mission-header{
+  margin:0 16px 16px;background:linear-gradient(135deg,#2E7D32,#4CAF88);
+  border-radius:var(--r-lg);padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.mission-header-left .mh-label{font-size:12px;color:rgba(255,255,255,0.75);}
+.mission-header-left .mh-points{font-size:28px;font-weight:800;color:#fff;line-height:1;}
+.mission-header-left .mh-sub{font-size:12px;color:rgba(255,255,255,0.75);}
+.mission-progress-wrap{text-align:right;}
+.mission-progress-bar{width:100px;height:8px;background:rgba(255,255,255,0.3);border-radius:4px;margin-top:8px;overflow:hidden;}
+.mission-progress-fill{height:100%;border-radius:4px;background:#fff;transition:width .6s ease;}
+.mission-level{font-size:11px;color:rgba(255,255,255,0.8);margin-top:4px;}
+
+.missions-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px 20px;}
+.mission-card{
+  background:var(--card);border-radius:var(--r-md);border:1px solid var(--card-border);
+  box-shadow:var(--shadow-xs);overflow:hidden;cursor:pointer;
+  transition:transform var(--t),box-shadow var(--t);
+}
+.mission-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.mission-card.completed{opacity:0.65;}
+.mission-card-img{height:90px;background:var(--bg3);position:relative;overflow:hidden;}
+.mission-card-img img{width:100%;height:100%;object-fit:cover;}
+.mission-points-badge{
+  position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.65);
+  border-radius:20px;padding:3px 8px;font-size:10px;font-weight:700;color:#fff;
+}
+.mission-card-body{padding:10px;}
+.mission-card-name{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px;}
+.mission-card-desc{font-size:11px;color:var(--text3);line-height:1.4;margin-bottom:8px;}
+.mission-status-chip{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;
+  font-size:10.5px;font-weight:600;
+}
+.status-open{background:var(--primary-l);color:var(--primary-dd);}
+.status-pending{background:#FFF3E0;color:#E65100;}
+.status-done{background:#E8F5E9;color:#2E7D32;}
+.btn-submit-mission{
+  width:100%;padding:7px;border-radius:50px;margin-top:8px;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  color:#fff;font-size:12px;font-weight:600;border:none;
+  transition:all var(--t);
+}
+.btn-submit-mission:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* ═══════════════════════════════════════
+   TRIP PLANNER
+═══════════════════════════════════════ */
+.planner-wrap{padding:0 16px 20px;}
+.planner-empty{
+  text-align:center;padding:32px 20px;background:var(--card);
+  border-radius:var(--r-lg);border:2px dashed var(--border);
+}
+.planner-empty-icon{font-size:48px;margin-bottom:12px;}
+.planner-empty-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.planner-empty-sub{font-size:13px;color:var(--text3);line-height:1.5;margin-bottom:16px;}
+.btn-create-trip{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 24px;
+  border-radius:50px;background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  color:#fff;font-size:14px;font-weight:600;border:none;
+  box-shadow:0 4px 16px rgba(76,175,136,0.35);transition:all var(--t);
+}
+.btn-create-trip:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(76,175,136,0.45);}
+
+/* Trip Builder */
+.trip-meta-bar{
+  background:var(--card);border-radius:var(--r-md);border:1px solid var(--card-border);
+  box-shadow:var(--shadow-xs);padding:14px;margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.trip-meta-bar svg{width:20px;height:20px;color:var(--primary);flex-shrink:0;}
+.trip-meta-info{flex:1;}
+.trip-meta-name{font-size:15px;font-weight:700;color:var(--text);}
+.trip-meta-sub{font-size:12px;color:var(--text3);}
+.btn-add-place{
+  display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:50px;
+  background:var(--primary);color:#fff;font-size:12.5px;font-weight:600;border:none;
+  flex-shrink:0;
+}
+
+.timeline-section{margin-bottom:16px;}
+.timeline-label{
+  font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.timeline-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.tl-morning .timeline-dot{background:#FF9800;}
+.tl-noon .timeline-dot{background:#4FC3F7;}
+.tl-evening .timeline-dot{background:#7E57C2;}
+
+.timeline-dropzone{
+  min-height:80px;border-radius:var(--r-md);
+  border:2px dashed var(--border);padding:8px;
+  display:flex;flex-direction:column;gap:8px;
+  transition:border-color .2s,background .2s;
+}
+.timeline-dropzone.drag-over{border-color:var(--primary);background:var(--primary-pl);}
+.timeline-dropzone-hint{
+  height:60px;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--text3);text-align:center;
+}
+.timeline-item{
+  background:var(--card);border-radius:var(--r-sm);border:1px solid var(--card-border);
+  padding:10px;display:flex;align-items:center;gap:10px;
+  box-shadow:var(--shadow-xs);cursor:grab;
+  transition:box-shadow var(--t),opacity var(--t);
+}
+.timeline-item:active{cursor:grabbing;box-shadow:var(--shadow-md);}
+.timeline-item.dragging{opacity:0.5;}
+.timeline-item-img{width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--bg3);}
+.timeline-item-info{flex:1;min-width:0;}
+.timeline-item-name{font-size:13px;font-weight:600;color:var(--text);}
+.timeline-item-sub{font-size:11px;color:var(--text3);}
+.btn-remove-item{
+  width:28px;height:28px;border-radius:50%;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text3);
+  transition:background var(--t),color var(--t);
+}
+.btn-remove-item:hover{background:#ffebee;color:#e53935;}
+.btn-remove-item svg{width:14px;height:14px;}
+
+.planner-actions{display:flex;gap:8px;margin-top:16px;}
+.btn-save-plan{
+  flex:1;padding:13px;border-radius:50px;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  color:#fff;font-size:14px;font-weight:600;border:none;
+  box-shadow:0 4px 16px rgba(76,175,136,0.35);
+}
+.btn-share-plan{
+  padding:13px 18px;border-radius:50px;border:1.5px solid var(--primary);
+  color:var(--primary);font-size:13px;font-weight:600;background:transparent;
+  display:flex;align-items:center;gap:6px;
+}
+.btn-share-plan svg{width:16px;height:16px;}
+
+/* Place Picker Modal */
+.place-picker-modal{
+  position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(6px);display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity var(--t);
+}
+.place-picker-modal.open{opacity:1;pointer-events:all;}
+.place-picker-sheet{
+  background:var(--card);border-radius:var(--r-xl) var(--r-xl) 0 0;
+  padding:20px 16px;width:100%;max-height:80vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(0.34,1.1,0.64,1);
+}
+.place-picker-modal.open .place-picker-sheet{transform:translateY(0);}
+.picker-handle{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px;}
+.picker-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;}
+.picker-search{
+  display:flex;align-items:center;gap:8px;background:var(--bg3);
+  border-radius:50px;padding:10px 14px;margin-bottom:12px;
+}
+.picker-search input{flex:1;font-size:14px;background:none;border:none;outline:none;color:var(--text);}
+.picker-search svg{width:16px;height:16px;color:var(--text3);}
+.picker-results{overflow-y:auto;display:flex;flex-direction:column;gap:8px;flex:1;}
+.picker-item{
+  display:flex;align-items:center;gap:12px;padding:10px;
+  border-radius:var(--r-sm);cursor:pointer;transition:background var(--t);
+}
+.picker-item:hover{background:var(--primary-pl);}
+.picker-item-img{width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--bg3);}
+.picker-item-name{font-size:13.5px;font-weight:600;color:var(--text);}
+.picker-item-sub{font-size:11.5px;color:var(--text3);margin-top:2px;}
+.picker-add-btn{
+  width:32px;height:32px;border-radius:50%;background:var(--primary);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;
+}
+
+/* ═══════════════════════════════════════
+   PROFILE VIEW
+═══════════════════════════════════════ */
+.profile-hero{
+  background:linear-gradient(160deg,#4CAF88 0%,#2E7D5A 100%);
+  padding:28px 20px 80px;text-align:center;position:relative;overflow:hidden;
+}
+.profile-avatar-wrap{position:relative;display:inline-block;margin-bottom:12px;}
+.profile-avatar{
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(255,255,255,0.25);border:4px solid rgba(255,255,255,0.6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:700;color:#fff;
+}
+.profile-persona-chip{
+  position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:20px;padding:3px 10px;
+  font-size:11px;font-weight:700;color:var(--primary-dd);white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+.profile-name{font-size:20px;font-weight:700;color:#fff;margin-bottom:2px;}
+.profile-email{font-size:13px;color:rgba(255,255,255,0.75);}
+
+.profile-stats-card{
+  margin:-48px 16px 0;background:var(--card);border-radius:var(--r-lg);
+  border:1px solid var(--card-border);box-shadow:var(--shadow-md);
+  padding:20px;position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+}
+.stat-item{text-align:center;padding:0 8px;}
+.stat-item+.stat-item{border-left:1px solid var(--border);}
+.stat-value{font-size:22px;font-weight:800;color:var(--primary);}
+.stat-label{font-size:11px;color:var(--text3);margin-top:2px;}
+
+.profile-section{padding:20px 16px 0;}
+.profile-section-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;}
+.badges-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.badge-item{
+  display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;
+  padding:10px 4px;border-radius:var(--r-sm);transition:background var(--t);
+}
+.badge-item:hover{background:var(--primary-pl);}
+.badge-icon{font-size:28px;}
+.badge-label{font-size:10px;color:var(--text3);text-align:center;line-height:1.2;}
+.badge-item.locked{opacity:0.4;}
+
+.settings-list{display:flex;flex-direction:column;gap:4px;padding:0 16px 40px;}
+.settings-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;background:var(--card);border-radius:var(--r-sm);
+  border:1px solid var(--card-border);cursor:pointer;transition:background var(--t);
+}
+.settings-item:hover{background:var(--primary-pl);}
+.settings-item-left{display:flex;align-items:center;gap:12px;}
+.settings-item-icon{
+  width:36px;height:36px;border-radius:10px;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.settings-item-label{font-size:14px;font-weight:500;color:var(--text);}
+.settings-item-chevron{color:var(--text3);}
+.settings-item-chevron svg{width:16px;height:16px;}
+.btn-logout{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:calc(100% - 32px);margin:0 16px 20px;padding:14px;
+  border-radius:50px;border:1.5px solid #ef5350;
+  color:#ef5350;font-size:14px;font-weight:600;background:transparent;
+  transition:all var(--t);
+}
+.btn-logout:hover{background:#ffebee;}
+.btn-logout svg{width:18px;height:18px;}
+
+/* ═══════════════════════════════════════
+   BOTTOM NAVIGATION
+═══════════════════════════════════════ */
+#bottomNav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:var(--nav-h);
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid var(--border);
+  display:flex;align-items:stretch;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  #bottomNav{background:rgba(15,26,20,0.94);}
+}
+.nav-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;cursor:pointer;
+  padding:8px 4px;transition:color var(--t);
+  color:var(--text3);position:relative;
+}
+.nav-tab.active{color:var(--primary);}
+.nav-tab .nav-icon{width:22px;height:22px;transition:transform var(--t);}
+.nav-tab.active .nav-icon{transform:scale(1.12);}
+.nav-tab .nav-label{font-size:10px;font-weight:600;}
+.nav-tab .nav-active-dot{
+  position:absolute;top:6px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--primary);
+  opacity:0;transition:opacity var(--t);
+}
+.nav-tab.active .nav-active-dot{opacity:1;}
+
+/* ═══════════════════════════════════════
+   DETAIL MODAL
+═══════════════════════════════════════ */
+.detail-modal{
+  position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity var(--t);
+}
+.detail-modal.open{opacity:1;pointer-events:all;}
+.detail-sheet{
+  background:var(--card);border-radius:var(--r-xl) var(--r-xl) 0 0;
+  width:100%;max-height:90vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(0.34,1.1,0.64,1);
+}
+.detail-modal.open .detail-sheet{transform:translateY(0);}
+.detail-hero{height:220px;position:relative;overflow:hidden;background:var(--bg3);}
+.detail-hero img{width:100%;height:100%;object-fit:cover;}
+.detail-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 55%);
+}
+.detail-close-btn{
+  position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:50%;
+  background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;
+  color:#fff;backdrop-filter:blur(4px);
+}
+.detail-close-btn svg{width:18px;height:18px;}
+.detail-content{padding:20px;}
+.detail-name{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.detail-type{font-size:13px;color:var(--primary);font-weight:600;margin-bottom:8px;}
+.detail-rating-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.detail-desc{font-size:14px;color:var(--text2);line-height:1.65;margin-bottom:16px;}
+.detail-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.detail-info-item{
+  background:var(--bg3);border-radius:var(--r-sm);padding:12px;
+}
+.detail-info-label{font-size:11px;color:var(--text3);margin-bottom:2px;}
+.detail-info-value{font-size:13px;font-weight:600;color:var(--text);}
+.detail-reviews-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:10px;}
+.review-item{
+  background:var(--bg3);border-radius:var(--r-sm);padding:12px;margin-bottom:8px;
+}
+.review-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.review-author{font-size:13px;font-weight:600;color:var(--text);}
+.review-stars{color:#F9A825;font-size:12px;}
+.review-text{font-size:12.5px;color:var(--text2);line-height:1.5;}
+.detail-btn-row{display:flex;gap:10px;margin-top:16px;padding-bottom:env(safe-area-inset-bottom,16px);}
+.btn-nav-big{
+  flex:1;padding:14px;border-radius:50px;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  color:#fff;font-size:14.5px;font-weight:600;border:none;
+  box-shadow:0 4px 16px rgba(76,175,136,0.35);
+}
+.btn-map-big{
+  padding:14px 18px;border-radius:50px;border:1.5px solid var(--primary);
+  color:var(--primary);font-size:13px;font-weight:600;background:transparent;
+  display:flex;align-items:center;gap:6px;
+}
+.btn-map-big svg{width:16px;height:16px;}
+
+/* ═══════════════════════════════════════
+   MISSION SUBMIT MODAL
+═══════════════════════════════════════ */
+.mission-modal{
+  position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity var(--t);
+}
+.mission-modal.open{opacity:1;pointer-events:all;}
+.mission-sheet{
+  background:var(--card);border-radius:var(--r-xl) var(--r-xl) 0 0;
+  width:100%;padding:24px;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(0.34,1.1,0.64,1);
+}
+.mission-modal.open .mission-sheet{transform:translateY(0);}
+.mission-sheet-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.mission-sheet-sub{font-size:13px;color:var(--text3);margin-bottom:20px;}
+.upload-zone{
+  border:2px dashed var(--border);border-radius:var(--r-md);
+  padding:32px 20px;text-align:center;cursor:pointer;
+  transition:border-color var(--t),background var(--t);margin-bottom:16px;
+}
+.upload-zone:hover{border-color:var(--primary);background:var(--primary-pl);}
+.upload-zone-icon{font-size:36px;margin-bottom:8px;}
+.upload-zone-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.upload-zone-sub{font-size:12px;color:var(--text3);}
+.upload-zone.has-img{border-style:solid;border-color:var(--primary);background:var(--primary-pl);}
+.upload-preview{width:100%;height:160px;object-fit:cover;border-radius:var(--r-md);margin-bottom:12px;display:none;}
+.ai-check-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.check-step{
+  display:flex;align-items:center;gap:10px;padding:10px;
+  background:var(--bg3);border-radius:var(--r-sm);
+  font-size:13px;color:var(--text2);
+}
+.check-step-icon{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.step-wait{background:var(--border);color:var(--text3);}
+.step-loading{background:#FFF3E0;color:#E65100;animation:pulse .8s infinite;}
+.step-ok{background:#E8F5E9;color:#2E7D32;}
+.step-fail{background:#FFEBEE;color:#C62828;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5};}
+.btn-send-mission{
+  width:100%;padding:14px;border-radius:50px;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  color:#fff;font-size:15px;font-weight:600;border:none;
+  box-shadow:0 4px 16px rgba(76,175,136,0.35);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-send-mission:disabled{opacity:0.5;}
+.btn-cancel-mission{
+  width:100%;padding:12px;border-radius:50px;margin-top:8px;
+  background:transparent;color:var(--text3);font-size:14px;font-weight:500;border:none;
+}
+
+/* ═══════════════════════════════════════
+   SUCCESS TOAST / REWARD
+═══════════════════════════════════════ */
+.toast{
+  position:fixed;bottom:calc(var(--nav-h) + 16px);left:16px;right:16px;z-index:600;
+  background:linear-gradient(135deg,#2E7D32,#4CAF88);
+  border-radius:var(--r-md);padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 8px 32px rgba(46,125,82,0.4);
+  transform:translateY(20px);opacity:0;pointer-events:none;
+  transition:all .35s cubic-bezier(0.34,1.2,0.64,1);
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-icon{font-size:22px;flex-shrink:0;}
+.toast-content .toast-title{font-size:14px;font-weight:700;color:#fff;}
+.toast-content .toast-sub{font-size:12px;color:rgba(255,255,255,0.8);}
+.toast-points{font-size:20px;font-weight:800;color:#fff;flex-shrink:0;}
+
+/* Reward Modal */
+.reward-modal{
+  position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity var(--t);
+}
+.reward-modal.open{opacity:1;pointer-events:all;}
+.reward-card{
+  background:var(--card);border-radius:var(--r-xl);padding:28px 24px;
+  text-align:center;width:100%;max-width:340px;
+  box-shadow:var(--shadow-lg);
+  transform:scale(0.85);transition:transform .35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.reward-modal.open .reward-card{transform:scale(1);}
+.reward-icon{font-size:52px;margin-bottom:12px;animation:bounceIn .5s ease;}
+@keyframes bounceIn{0%{transform:scale(0.3);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+.reward-title{font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.reward-sub{font-size:14px;color:var(--text2);line-height:1.5;margin-bottom:20px;}
+.reward-options{display:flex;gap:10px;margin-bottom:16px;}
+.reward-option{
+  flex:1;padding:14px 10px;border-radius:var(--r-md);border:2px solid var(--border);
+  cursor:pointer;transition:all var(--t);text-align:center;
+}
+.reward-option:hover,.reward-option.selected{border-color:var(--primary);background:var(--primary-pl);}
+.reward-option-icon{font-size:28px;margin-bottom:6px;}
+.reward-option-label{font-size:12.5px;font-weight:600;color:var(--text);}
+.reward-option-sub{font-size:11px;color:var(--text3);}
+.btn-claim-reward{
+  width:100%;padding:14px;border-radius:50px;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  color:#fff;font-size:15px;font-weight:600;border:none;
+  box-shadow:0 4px 16px rgba(76,175,136,0.35);
+}
+.btn-dismiss-reward{
+  width:100%;padding:10px;border-radius:50px;margin-top:8px;
+  background:transparent;color:var(--text3);font-size:13px;border:none;
+}
+
+/* ═══════════════════════════════════════
+   CREATE TRIP MODAL
+═══════════════════════════════════════ */
+.create-trip-modal{
+  position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(8px);display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity var(--t);
+}
+.create-trip-modal.open{opacity:1;pointer-events:all;}
+.create-trip-sheet{
+  background:var(--card);border-radius:var(--r-xl) var(--r-xl) 0 0;
+  width:100%;padding:24px;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(0.34,1.1,0.64,1);
+}
+.create-trip-modal.open .create-trip-sheet{transform:translateY(0);}
+.create-trip-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;}
+.form-field{margin-bottom:14px;}
+.form-field label{display:block;font-size:12.5px;font-weight:600;color:var(--text2);margin-bottom:6px;}
+.form-field input{
+  width:100%;padding:12px 14px;border-radius:var(--r-sm);
+  border:1.5px solid var(--border);background:var(--bg3);
+  font-size:14px;color:var(--text);outline:none;
+  transition:border-color var(--t);
+}
+.form-field input:focus{border-color:var(--primary);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-create-confirm{
+  width:100%;padding:14px;border-radius:50px;margin-top:8px;
+  background:linear-gradient(135deg,#4CAF88,#2E7D5A);
+  color:#fff;font-size:15px;font-weight:600;border:none;
+  box-shadow:0 4px 16px rgba(76,175,136,0.35);
+}
+
+/* ═══════════════════════════════════════
+   FLOATING AI FAB
+═══════════════════════════════════════ */
+.fab{
+  position:fixed;right:16px;bottom:calc(var(--nav-h) + 16px);z-index:150;
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,#4FC3F7,#0288d1);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(79,195,247,0.45);
+  cursor:pointer;border:none;
+  transition:transform var(--t),box-shadow var(--t);
+}
+.fab:hover{transform:scale(1.1);box-shadow:0 10px 28px rgba(79,195,247,0.55);}
+.fab svg{width:24px;height:24px;color:#fff;}
+
+/* ═══════════════════════════════════════
+   SKELETON LOADING
+═══════════════════════════════════════ */
+@keyframes shimmer{
+  0%{background-position:-200% 0;}
+  100%{background-position:200% 0;}
+}
+.skeleton{
+  background:linear-gradient(90deg,var(--bg3) 25%,var(--border) 50%,var(--bg3) 75%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;
+}
+
+/* ═══════════════════════════════════════
+   UTILS
+═══════════════════════════════════════ */
+.divider{height:1px;background:var(--border);margin:0;}
+.spacer-16{height:16px;}
+.spacer-8{height:8px;}
+.text-center{text-align:center;}
+.color-primary{color:var(--primary);}
+.fw-700{font-weight:700;}
+
+/* daily mission teasers on home */
+.daily-missions-row{display:flex;flex-direction:column;gap:8px;padding:0 16px 20px;}
+.daily-mission-item{
+  background:var(--card);border-radius:var(--r-md);border:1px solid var(--card-border);
+  padding:12px 14px;display:flex;align-items:center;gap:12px;
+  box-shadow:var(--shadow-xs);cursor:pointer;transition:transform var(--t),box-shadow var(--t);
+}
+.daily-mission-item:hover{transform:translateX(3px);box-shadow:var(--shadow-sm);}
+.daily-mission-emoji{font-size:22px;flex-shrink:0;}
+.daily-mission-info{flex:1;}
+.daily-mission-name{font-size:13px;font-weight:600;color:var(--text);}
+.daily-mission-pts{font-size:11px;color:var(--primary);font-weight:600;}
+.daily-mission-arrow{color:var(--text3);}
+.daily-mission-arrow svg{width:16px;height:16px;}
+</style>
+</head>
+<body>
+<div id="pageOverlay"></div>
+
+<!-- ═══ HEADER ═══ -->
+<div id="app">
+<header id="header">
+  <div class="hdr-logo" onclick="switchTab('home')">
+    <div class="hdr-logo-icon">
+      <svg viewBox="0 0 48 48" fill="none"><path d="M24 6s-16 8-16 22c0 8.837 7.163 16 16 16s16-7.163 16-16C40 14 24 6 24 6z" fill="rgba(255,255,255,0.28)" stroke="white" stroke-width="1.5"/><path d="M24 44s0-22-14-26" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <span class="hdr-brand">เยาวชวน</span>
+  </div>
+  <div class="hdr-greeting" id="hdrGreeting">สวัสดี, นักเดินทาง</div>
+  <div class="hdr-actions">
+    <button class="hdr-icon-btn" id="btnSearchOpen" aria-label="ค้นหา">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <button class="hdr-icon-btn" aria-label="แจ้งเตือน">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <div class="hdr-notif-badge"></div>
+    </button>
+    <div class="hdr-avatar" id="hdrAvatar" onclick="switchTab('profile')">ย</div>
+  </div>
+</header>
+
+<!-- ═══ SEARCH OVERLAY ═══ -->
+<div id="searchOverlay" role="dialog" aria-modal="true" aria-label="ค้นหา">
+  <div class="search-box-wrap">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="search" placeholder="ค้นหาร้านอาหาร สถานที่ หรือภารกิจ..." autocomplete="off"/>
+      <button class="search-close-btn" id="btnSearchClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="searchResults"><div class="search-empty">🔍 พิมพ์เพื่อค้นหา...</div></div>
+  </div>
+</div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<main id="mainContent">
+
+<!-- ────────── VIEW: HOME ────────── -->
+<section id="viewHome" class="view active">
+  <!-- Hero Carousel -->
+  <div class="hero-wrap" id="heroCarousel">
+    <div class="hero-slide active" id="slide0">
+      <div class="hero-img" style="background:linear-gradient(135deg,#2E7D5A 0%,#4CAF88 50%,#81c995 100%);display:flex;align-items:center;justify-content:center;">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" opacity="0.25"><circle cx="60" cy="60" r="55" stroke="white" stroke-width="2"/><path d="M60 10C60 10 20 30 20 65C20 87 38 105 60 105C82 105 100 87 100 65C100 30 60 10 60 10Z" fill="white"/></svg>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-title">ค้นพบเมืองเก่าสงขลา<br/>ในแบบของคุณ</div>
+        <div class="hero-sub">ท่องเที่ยวอย่างยั่งยืน สะสม Eco Points</div>
+        <div class="hero-btns">
+          <button class="hero-btn hero-btn-primary" onclick="switchTab('thiao')">🏛️ เริ่มเที่ยว</button>
+          <button class="hero-btn hero-btn-ghost" onclick="switchTab('plan')">🗺️ วางแผนทริป</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slide" id="slide1">
+      <div class="hero-img" style="background:linear-gradient(135deg,#1565C0 0%,#4FC3F7 100%);display:flex;align-items:center;justify-content:center;">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" opacity="0.22"><rect x="10" y="30" width="80" height="50" rx="4" stroke="white" stroke-width="2"/><path d="M10 40h80" stroke="white" stroke-width="1.5"/><path d="M50 20v10M35 20v10M65 20v10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-title">ภารกิจรักษ์โลก<br/>สนุก ได้คะแนน</div>
+        <div class="hero-sub">ทำภารกิจ สะสม Eco Points แลกรางวัล</div>
+        <div class="hero-btns">
+          <button class="hero-btn hero-btn-primary" onclick="switchTab('mission')">🌱 ดูภารกิจ</button>
+          <button class="hero-btn hero-btn-ghost" onclick="switchTab('chiim')">🍜 ชวนชิม</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slide" id="slide2">
+      <div class="hero-img" style="background:linear-gradient(135deg,#E65100 0%,#F9A825 100%);display:flex;align-items:center;justify-content:center;">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" opacity="0.22"><circle cx="50" cy="45" r="25" stroke="white" stroke-width="2"/><path d="M50 70v15M38 85h24" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-title">ร้านค้าชุมชน<br/>สินค้าท้องถิ่นสงขลา</div>
+        <div class="hero-sub">สนับสนุนเศรษฐกิจชุมชน ผลิตภัณฑ์คุณภาพ</div>
+        <div class="hero-btns">
+          <button class="hero-btn hero-btn-primary" onclick="switchTab('chai')">🛍️ ชวนใช้</button>
+          <button class="hero-btn hero-btn-ghost" onclick="switchTab('chiim')">🍜 ชวนชิม</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-dots" id="heroDots">
+      <div class="hero-dot active" data-i="0"></div>
+      <div class="hero-dot" data-i="1"></div>
+      <div class="hero-dot" data-i="2"></div>
+    </div>
+  </div>
+
+  <!-- Persona Banner -->
+  <div class="section">
+    <div class="persona-banner" id="personaBanner">
+      <div class="persona-icon" id="personaIcon">🧭</div>
+      <div class="persona-info">
+        <div class="persona-type">บุคลิกนักเดินทางของคุณ</div>
+        <div class="persona-name" id="personaName">นักจารึกกาลเวลา</div>
+        <div class="persona-desc" id="personaDesc">ชื่นชอบประวัติศาสตร์และวัฒนธรรมท้องถิ่น</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Menu -->
+  <div class="menu-grid">
+    <div class="menu-card mc-chiim" onclick="switchTab('chiim')">
+      <div class="menu-card-icon">🍜</div>
+      <div class="menu-card-label">ชวนชิม</div>
+      <div class="menu-card-sub">ร้านอาหาร&คาเฟ่</div>
+    </div>
+    <div class="menu-card mc-thiao" onclick="switchTab('thiao')">
+      <div class="menu-card-icon">🏛️</div>
+      <div class="menu-card-label">ชวนเที่ยว</div>
+      <div class="menu-card-sub">สถานที่ท่องเที่ยว</div>
+    </div>
+    <div class="menu-card mc-chai" onclick="switchTab('chai')">
+      <div class="menu-card-icon">🛍️</div>
+      <div class="menu-card-label">ชวนใช้</div>
+      <div class="menu-card-sub">ร้านค้าชุมชน</div>
+    </div>
+    <div class="menu-card mc-tham" onclick="switchTab('mission')">
+      <div class="menu-card-icon">🌱</div>
+      <div class="menu-card-label">ชวนทำ</div>
+      <div class="menu-card-sub">ภารกิจรักษ์โลก</div>
+    </div>
+    <div class="menu-card mc-plan" onclick="switchTab('plan')">
+      <div class="menu-card-icon">🗺️</div>
+      <div class="menu-card-label">ชวนวางแผน</div>
+      <div class="menu-card-sub">Trip Planner</div>
+    </div>
+    <div class="menu-card mc-profile" onclick="switchTab('profile')">
+      <div class="menu-card-icon">👤</div>
+      <div class="menu-card-label">โปรไฟล์</div>
+      <div class="menu-card-sub">คะแนน&ประวัติ</div>
+    </div>
+  </div>
+
+  <!-- AI Recommended -->
+  <div class="section" style="padding-bottom:0;">
+    <div class="section-header">
+      <div class="section-title">⭐ แนะนำสำหรับคุณ</div>
+      <div class="section-link" onclick="switchTab('thiao')">ดูทั้งหมด</div>
+    </div>
+  </div>
+  <div class="h-scroll-wrap" id="recScrollWrap"></div>
+
+  <!-- Daily Missions -->
+  <div class="section" style="padding-bottom:0;">
+    <div class="section-header">
+      <div class="section-title">🌱 ภารกิจวันนี้</div>
+      <div class="section-link" onclick="switchTab('mission')">ดูทั้งหมด</div>
+    </div>
+  </div>
+  <div class="daily-missions-row" id="dailyMissionsPreview"></div>
+  <div class="spacer-16"></div>
+</section>
+
+<!-- ────────── VIEW: ชวนชิม ────────── -->
+<section id="viewChiim" class="view">
+  <div class="spacer-8"></div>
+  <div class="pill-wrap" id="chiimPills"></div>
+  <div class="content-list" id="chiimList"></div>
+</section>
+
+<!-- ────────── VIEW: ชวนเที่ยว ────────── -->
+<section id="viewThiao" class="view">
+  <div class="spacer-8"></div>
+  <div class="pill-wrap" id="thiaoPills"></div>
+  <div class="content-list" id="thiaoList"></div>
+</section>
+
+<!-- ────────── VIEW: ชวนใช้ ────────── -->
+<section id="viewChai" class="view">
+  <div class="spacer-8"></div>
+  <div class="pill-wrap" id="chaiPills"></div>
+  <div class="content-list" id="chaiList"></div>
+</section>
+
+<!-- ────────── VIEW: ชวนทำ ────────── -->
+<section id="viewMission" class="view">
+  <div class="spacer-8"></div>
+  <div class="mission-header">
+    <div class="mission-header-left">
+      <div class="mh-label">Eco Points สะสม</div>
+      <div class="mh-points" id="missionPointsDisplay">0</div>
+      <div class="mh-sub">คะแนน</div>
+    </div>
+    <div class="mission-progress-wrap">
+      <div style="font-size:11px;color:rgba(255,255,255,0.75);">เป้าหมาย 300 คะแนน</div>
+      <div class="mission-progress-bar"><div class="mission-progress-fill" id="missionProgressFill" style="width:0%"></div></div>
+      <div class="mission-level" id="missionLevelLabel">🌱 เมล็ดพันธุ์</div>
+    </div>
+  </div>
+  <div class="missions-grid" id="missionsGrid"></div>
+</section>
+
+<!-- ────────── VIEW: ชวนวางแผน ────────── -->
+<section id="viewPlan" class="view">
+  <div class="spacer-8"></div>
+  <div class="planner-wrap" id="plannerWrap">
+    <div class="planner-empty" id="plannerEmpty">
+      <div class="planner-empty-icon">🗺️</div>
+      <div class="planner-empty-title">ยังไม่มีแผนการเดินทาง</div>
+      <div class="planner-empty-sub">สร้างแผนทริปเมืองเก่าสงขลา<br/>ลากสถานที่ที่ชอบลงใน Timeline</div>
+      <button class="btn-create-trip" id="btnCreateTrip">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        สร้างทริปใหม่
+      </button>
+    </div>
+    <div id="tripBuilder" style="display:none;">
+      <div class="trip-meta-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div class="trip-meta-info">
+          <div class="trip-meta-name" id="tripName">ทริปเมืองเก่าสงขลา</div>
+          <div class="trip-meta-sub" id="tripMeta">1 วัน | 0 สถานที่</div>
+        </div>
+        <button class="btn-add-place" id="btnAddPlace">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          เพิ่มสถานที่
+        </button>
+      </div>
+
+      <div class="timeline-section tl-morning">
+        <div class="timeline-label">
+          <div class="timeline-dot"></div>
+          ☀️ ช่วงเช้า (07:00 – 12:00)
+        </div>
+        <div class="timeline-dropzone" id="dropMorning" data-slot="morning"></div>
+      </div>
+      <div class="timeline-section tl-noon">
+        <div class="timeline-label">
+          <div class="timeline-dot"></div>
+          🌤️ ช่วงกลางวัน (12:00 – 17:00)
+        </div>
+        <div class="timeline-dropzone" id="dropNoon" data-slot="noon"></div>
+      </div>
+      <div class="timeline-section tl-evening">
+        <div class="timeline-label">
+          <div class="timeline-dot"></div>
+          🌆 ช่วงเย็น (17:00 – 21:00)
+        </div>
+        <div class="timeline-dropzone" id="dropEvening" data-slot="evening"></div>
+      </div>
+
+      <div class="planner-actions">
+        <button class="btn-save-plan" onclick="saveTripPlan()">💾 บันทึกแผนทริป</button>
+        <button class="btn-share-plan" onclick="shareTrip()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          แชร์
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── VIEW: โปรไฟล์ ────────── -->
+<section id="viewProfile" class="view">
+  <div class="profile-hero">
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar">ย</div>
+      <div class="profile-persona-chip" id="profilePersonaChip">🧭 นักจารึก</div>
+    </div>
+    <div class="profile-name">คุณนักเดินทาง</div>
+    <div class="profile-email">traveler@yaowchuan.th</div>
+  </div>
+  <div class="profile-stats-card">
+    <div class="stat-item" onclick="switchTab('mission')">
+      <div class="stat-value" id="statPoints">0</div>
+      <div class="stat-label">Eco Points</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="statMissions">0</div>
+      <div class="stat-label">ภารกิจสำเร็จ</div>
+    </div>
+    <div class="stat-item" onclick="switchTab('plan')">
+      <div class="stat-value" id="statTrips">0</div>
+      <div class="stat-label">ทริปทั้งหมด</div>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-section-title">🏅 ความสำเร็จ</div>
+    <div class="badges-grid">
+      <div class="badge-item" onclick="badgeAlert('🌿','นักท่องเที่ยวรักษ์โลก','เดินทางโดยไม่สร้างขยะ 3 ครั้ง')">
+        <div class="badge-icon">🌿</div><div class="badge-label">รักษ์โลก</div>
+      </div>
+      <div class="badge-item" onclick="badgeAlert('📸','ช่างภาพเมืองเก่า','ถ่ายภาพ Street Art ครบ 5 จุด')">
+        <div class="badge-icon">📸</div><div class="badge-label">ช่างภาพ</div>
+      </div>
+      <div class="badge-item" onclick="badgeAlert('🍜','นักชิมตัวจริง','ลองอาหารพื้นเมือง 5 เมนู')">
+        <div class="badge-icon">🍜</div><div class="badge-label">นักชิม</div>
+      </div>
+      <div class="badge-item locked" onclick="badgeAlert('🔒','ล็อกอยู่','สะสม Eco Points ให้ครบ 300 คะแนน')">
+        <div class="badge-icon">⭐</div><div class="badge-label">ดาวทอง</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-section" style="margin-bottom:16px;">
+    <div class="profile-section-title">⚙️ ตั้งค่า</div>
+  </div>
+  <div class="settings-list">
+    <div class="settings-item" onclick="alert('แก้ไขข้อมูลส่วนตัว (จำลอง)')">
+      <div class="settings-item-left">
+        <div class="settings-item-icon">👤</div>
+        <div class="settings-item-label">ข้อมูลส่วนตัว</div>
+      </div>
+      <div class="settings-item-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="settings-item" onclick="alert('การแจ้งเตือน (จำลอง)')">
+      <div class="settings-item-left">
+        <div class="settings-item-icon">🔔</div>
+        <div class="settings-item-label">การแจ้งเตือน</div>
+      </div>
+      <div class="settings-item-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="settings-item" onclick="window.location.href='privacy.html'">
+      <div class="settings-item-left">
+        <div class="settings-item-icon">🔒</div>
+        <div class="settings-item-label">นโยบายความเป็นส่วนตัว</div>
+      </div>
+      <div class="settings-item-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div class="settings-item" onclick="window.location.href='terms.html'">
+      <div class="settings-item-left">
+        <div class="settings-item-icon">📄</div>
+        <div class="settings-item-label">เงื่อนไขการใช้งาน</div>
+      </div>
+      <div class="settings-item-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  </div>
+  <button class="btn-logout" onclick="navigateTo('login.html')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    ออกจากระบบ
+  </button>
+</section>
+
+</main><!-- /mainContent -->
+
+<!-- ═══ BOTTOM NAVIGATION ═══ -->
+<nav id="bottomNav" role="navigation" aria-label="เมนูหลัก">
+  <div class="nav-tab active" id="navHome" onclick="switchTab('home')">
+    <div class="nav-active-dot"></div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="nav-label">หน้าหลัก</span>
+  </div>
+  <div class="nav-tab" id="navChiim" onclick="switchTab('chiim')">
+    <div class="nav-active-dot"></div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2h18l-2 7H5L3 2z"/><path d="M5 9v12a1 1 0 001 1h12a1 1 0 001-1V9"/></svg>
+    <span class="nav-label">ชวนชิม</span>
+  </div>
+  <div class="nav-tab" id="navThiao" onclick="switchTab('thiao')">
+    <div class="nav-active-dot"></div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <span class="nav-label">ชวนเที่ยว</span>
+  </div>
+  <div class="nav-tab" id="navMission" onclick="switchTab('mission')">
+    <div class="nav-active-dot"></div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span class="nav-label">ชวนทำ</span>
+  </div>
+  <div class="nav-tab" id="navProfile" onclick="switchTab('profile')">
+    <div class="nav-active-dot"></div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="nav-label">โปรไฟล์</span>
+  </div>
+</nav>
+</div><!-- /app -->
+
+<!-- ═══ DETAIL MODAL ═══ -->
+<div class="detail-modal" id="detailModal" role="dialog" aria-modal="true">
+  <div class="detail-sheet" id="detailSheet">
+    <div class="detail-hero" id="detailHero">
+      <div class="detail-hero-overlay"></div>
+      <button class="detail-close-btn" onclick="closeDetail()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="detail-content">
+      <div class="detail-name" id="detailName"></div>
+      <div class="detail-type" id="detailType"></div>
+      <div class="detail-rating-row">
+        <span class="stars" id="detailStars">★★★★★</span>
+        <span class="rating-num" id="detailRating">4.8</span>
+        <span style="font-size:12px;color:var(--text3)" id="detailReviewCount">(120 รีวิว)</span>
+      </div>
+      <div class="detail-desc" id="detailDesc"></div>
+      <div class="detail-info-grid" id="detailInfoGrid"></div>
+      <div class="detail-reviews-title">💬 รีวิวจากผู้ใช้</div>
+      <div id="detailReviews"></div>
+      <div class="detail-btn-row">
+        <button class="btn-map-big" id="detailMapBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Google Maps
+        </button>
+        <button class="btn-nav-big" onclick="closeDetail();showToast('🗺️','เพิ่มใน Trip Planner แล้ว!','กดชวนวางแผนเพื่อดูแผนทริป',0)">+ เพิ่มในแผนทริป</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MISSION MODAL ═══ -->
+<div class="mission-modal" id="missionModal" role="dialog" aria-modal="true">
+  <div class="mission-sheet">
+    <div class="mission-sheet-title" id="missionModalTitle">ส่งภารกิจ</div>
+    <div class="mission-sheet-sub" id="missionModalSub">อัปโหลดหลักฐานเพื่อรับ Eco Points</div>
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-zone-icon">📸</div>
+      <div class="upload-zone-label">แตะเพื่ออัปโหลดรูปภาพ</div>
+      <div class="upload-zone-sub">รองรับ JPG, PNG ขนาดไม่เกิน 10MB</div>
+    </div>
+    <img class="upload-preview" id="uploadPreview" alt="ตัวอย่างรูปที่อัปโหลด"/>
+    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileUpload(event)"/>
+    <div class="ai-check-steps" id="aiCheckSteps" style="display:none">
+      <div class="check-step" id="step-img"><div class="check-step-icon step-wait">📷</div><span>ตรวจสอบรูปภาพด้วย AI</span></div>
+      <div class="check-step" id="step-gps"><div class="check-step-icon step-wait">📍</div><span>ยืนยันตำแหน่ง GPS</span></div>
+      <div class="check-step" id="step-time"><div class="check-step-icon step-wait">⏰</div><span>ตรวจสอบเวลา</span></div>
+    </div>
+    <button class="btn-send-mission" id="btnSendMission" onclick="submitMission()" disabled>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      ส่งภารกิจ
+    </button>
+    <button class="btn-cancel-mission" onclick="closeMissionModal()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- ═══ REWARD MODAL ═══ -->
+<div class="reward-modal" id="rewardModal" role="dialog" aria-modal="true">
+  <div class="reward-card">
+    <div class="reward-icon">🎉</div>
+    <div class="reward-title">Mission สำเร็จ! 🌿</div>
+    <div class="reward-sub" id="rewardDesc">คุณได้รับ 30 Eco Points!<br/>เลือกรับของรางวัลได้เลย</div>
+    <div class="reward-options">
+      <div class="reward-option selected" onclick="selectReward(this,'onsite')">
+        <div class="reward-option-icon">🏪</div>
+        <div class="reward-option-label">รับที่จุดบริการ</div>
+        <div class="reward-option-sub">On-site</div>
+      </div>
+      <div class="reward-option" onclick="selectReward(this,'online')">
+        <div class="reward-option-icon">📦</div>
+        <div class="reward-option-label">จัดส่งออนไลน์</div>
+        <div class="reward-option-sub">Online Delivery</div>
+      </div>
+    </div>
+    <button class="btn-claim-reward" onclick="claimReward()">🎁 รับรางวัล</button>
+    <button class="btn-dismiss-reward" onclick="closeReward()">ไว้ภายหลัง</button>
+  </div>
+</div>
+
+<!-- ═══ CREATE TRIP MODAL ═══ -->
+<div class="create-trip-modal" id="createTripModal" role="dialog" aria-modal="true">
+  <div class="create-trip-sheet">
+    <div class="create-trip-title">🗺️ สร้างทริปใหม่</div>
+    <div class="form-field">
+      <label for="tripNameInput">ชื่อทริป</label>
+      <input id="tripNameInput" type="text" placeholder="เช่น ทริปเมืองเก่าสงขลา 1 วัน" value="ทริปเมืองเก่าสงขลา"/>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label for="tripDateInput">วันที่เดินทาง</label>
+        <input id="tripDateInput" type="date"/>
+      </div>
+      <div class="form-field">
+        <label for="tripDaysInput">จำนวนวัน</label>
+        <input id="tripDaysInput" type="number" min="1" max="7" value="1" placeholder="วัน"/>
+      </div>
+    </div>
+    <button class="btn-create-confirm" onclick="confirmCreateTrip()">✅ สร้างทริป</button>
+  </div>
+</div>
+
+<!-- ═══ PLACE PICKER ═══ -->
+<div class="place-picker-modal" id="placePickerModal" role="dialog" aria-modal="true">
+  <div class="place-picker-sheet">
+    <div class="picker-handle"></div>
+    <div class="picker-title">📌 เพิ่มสถานที่ในทริป</div>
+    <div class="picker-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="pickerSearchInput" type="text" placeholder="ค้นหาสถานที่..." oninput="filterPicker(this.value)"/>
+    </div>
+    <div class="picker-results" id="pickerResults"></div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <div class="toast-icon" id="toastIcon">🎉</div>
+  <div class="toast-content">
+    <div class="toast-title" id="toastTitle">สำเร็จ!</div>
+    <div class="toast-sub" id="toastSub"></div>
+  </div>
+  <div class="toast-points" id="toastPoints"></div>
+</div>
+
+<!-- ═══ FAB ═══ -->
+<button class="fab" onclick="switchTab('plan')" aria-label="วางแผนทริป" title="ชวนวางแผน">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+</button>
+
+<script>
+/* ═══════════════════════════════════════
+   MOCK DATA
+═══════════════════════════════════════ */
+const RESTAURANTS = [
+  {id:'r1',name:'ร้านไอติมโอ่ง',type:'chiim',cat:'คาเฟ่&ของหวาน',tag:'ไอศกรีมโบราณ | คาเฟ่',desc:'ไอศกรีมกะทิโบราณในโอ่งดินเผา สูตรต้นตำรับเมืองสงขลา รสชาติเข้มข้น หอมกะทิ ใช้วัตถุดิบท้องถิ่น 100%',rating:4.9,reviews:230,eco:'gold',hours:'10:00 – 21:00',location:'ถนนนางงาม เมืองสงขลา',price:'30–80 บาท',color:'#FF8F00',emoji:'🍦',
+    reviews_list:[{author:'คุณนิดา',stars:'★★★★★',text:'อร่อยมาก ไอติมกะทิหอมหวาน บรรยากาศดี'},
+                  {author:'คุณปลา',stars:'★★★★☆',text:'ของหวานอร่อย ที่นั่งน้อยหน่อย แต่คุ้มมาก'}]},
+  {id:'r2',name:'ก๋วยเตี๋ยวในรู @ถนนนางงาม',type:'chiim',cat:'ร้านอาหาร',tag:'ก๋วยเตี๋ยว | ของกินเมืองเก่า',desc:'ร้านแคบเล็กซ่อนตัวอยู่ในตรอกถนนนางงาม ก๋วยเตี๋ยวหมูสูตรดั้งเดิม น้ำซุปใส หวานธรรมชาติ มีแฟนคลับประจำมากมาย',rating:4.7,reviews:340,eco:'green',hours:'07:00 – 14:00',location:'ถนนนางงาม เมืองเก่าสงขลา',price:'35–55 บาท',color:'#8D6E63',emoji:'🍜',
+    reviews_list:[{author:'คุณโอม',stars:'★★★★★',text:'ก๋วยเตี๋ยวอร่อยมากๆ น้ำซุปชัดเจน ไม่อิ่มก็กินได้หลายชาม'},
+                  {author:'คุณมาย',stars:'★★★★★',text:'ของเก่าแต่ดั้งเดิม มาเที่ยวสงขลาต้องแวะ!'}]},
+  {id:'r3',name:'ขนมไข่ป้ามน',type:'chiim',cat:'ของหวาน',tag:'ขนมไทยโบราณ | ของฝาก',desc:'ขนมไข่สูตรต้นตำรับ อบสดใหม่ทุกวัน กรอบนอกนุ่มใน หอมหวาน เป็นของฝากยอดนิยมจากสงขลา',rating:4.8,reviews:180,eco:'green',hours:'08:00 – 17:00',location:'ถนนนครนอก เมืองสงขลา',price:'20–50 บาท',color:'#FFB300',emoji:'🥚',
+    reviews_list:[{author:'คุณแพร',stars:'★★★★★',text:'อร่อยมากที่สุด ซื้อกลับบ้านทุกครั้ง'},
+                  {author:'คุณบอล',stars:'★★★★☆',text:'หอมหวาน ควรสั่งล่วงหน้าช่วงเทศกาล'}]},
+  {id:'r4',name:'ข้าวยำปักษ์ใต้ เจ๊แดง',type:'chiim',cat:'ร้านอาหาร',tag:'อาหารปักษ์ใต้ | เมนูพื้นถิ่น',desc:'ข้าวยำสูตรดั้งเดิม ใช้ผักพื้นบ้านสด น้ำบูดูโฮมเมด กินดีมีประโยชน์ เหมาะสำหรับมื้อเช้าหรือมื้อกลางวัน',rating:4.6,reviews:210,eco:'platinum',hours:'06:30 – 13:00',location:'ตลาดเช้าสงขลา',price:'40–65 บาท',color:'#2E7D32',emoji:'🍱',
+    reviews_list:[{author:'คุณจ๊อป',stars:'★★★★★',text:'ข้าวยำแซ่บ น้ำบูดูหอม ผักเยอะมาก อิ่มนาน'},
+                  {author:'คุณนิ',stars:'★★★★☆',text:'อร่อยมาก ต้องมาเช้าหรืออาจหมดก่อน'}]},
+  {id:'r5',name:'คาเฟ่โรงสีแดง',type:'chiim',cat:'คาเฟ่&เครื่องดื่ม',tag:'คาเฟ่ | บรรยากาศวินเทจ',desc:'คาเฟ่ในอาคารโรงสีข้าวเก่าอายุกว่า 100 ปี ดื่มกาแฟสดท่ามกลางบรรยากาศประวัติศาสตร์ พร้อมชมงานศิลปะและของแต่งร้านวินเทจ',rating:4.7,reviews:290,eco:'gold',hours:'09:00 – 20:00',location:'ย่านเมืองเก่า ถนนนครใน สงขลา',price:'60–150 บาท',color:'#C62828',emoji:'☕',
+    reviews_list:[{author:'คุณเอ',stars:'★★★★★',text:'บรรยากาศสวยมาก กาแฟอร่อย มาถ่ายรูปได้เรื่อยๆ'},
+                  {author:'คุณน้ำ',stars:'★★★★★',text:'คาเฟ่สวยที่สุดในสงขลา ต้องมา!'}]}
+];
+
+const ATTRACTIONS = [
+  {id:'a1',name:'ถนนนครนอก',type:'thiao',cat:'ประวัติศาสตร์',tag:'ถนนเก่าแก่ | ชิโน-โปรตุกีส',desc:'ถนนสายประวัติศาสตร์ของย่านเมืองเก่าสงขลา เรียงรายด้วยอาคารชิโน-โปรตุกีสอันงดงาม สีสันสดใส จุดถ่ายภาพยอดนิยม',rating:4.8,reviews:520,eco:'green',hours:'ตลอด 24 ชั่วโมง',location:'ถนนนครนอก อ.เมือง สงขลา',color:'#E65100',emoji:'🏛️',
+    reviews_list:[{author:'คุณซัน',stars:'★★★★★',text:'สวยมาก สีอาคารสดใส ตอนเช้าอากาศดีมาก'},
+                  {author:'คุณพิม',stars:'★★★★★',text:'ต้องมาทุกครั้งที่มาสงขลา ถนนเก่าแก่สวยงาม'}]},
+  {id:'a2',name:'ถนนนางงาม',type:'thiao',cat:'ศิลปะ',tag:'Street Art | จุดถ่ายรูป',desc:'ถนนสายวัฒนธรรมที่โดดเด่นด้วยงาน Street Art จากศิลปินท้องถิ่น ภาพจิตรกรรมฝาผนังเล่าเรื่องราวชีวิตชุมชน วิถีชีวิตชาวประมง และประวัติศาสตร์เมืองสงขลา',rating:4.9,reviews:680,eco:'green',hours:'ตลอด 24 ชั่วโมง',location:'ถนนนางงาม อ.เมือง สงขลา',color:'#6A1B9A',emoji:'🎨',
+    reviews_list:[{author:'คุณแตง',stars:'★★★★★',text:'ภาพวาดสวยมาก ทุกกำแพงมีเรื่องราวน่าสนใจ'},
+                  {author:'คุณฟ้า',stars:'★★★★★',text:'ถ่ายรูปสวยทุกมุม ชอบมากๆ ควรมาเช้าๆ'}]},
+  {id:'a3',name:'โรงสีแดง',type:'thiao',cat:'ประวัติศาสตร์',tag:'อาคารเก่า | มรดกทางวัฒนธรรม',desc:'อาคารโรงสีข้าวอายุกว่า 100 ปี สัญลักษณ์ทางประวัติศาสตร์ของสงขลา ปัจจุบันแปรรูปเป็นพื้นที่สร้างสรรค์ ประกอบด้วยคาเฟ่ แกลเลอรี่ และร้านค้าชุมชน',rating:4.7,reviews:390,eco:'gold',hours:'09:00 – 21:00',location:'ถนนนครใน อ.เมือง สงขลา',color:'#B71C1C',emoji:'🏭',
+    reviews_list:[{author:'คุณต้น',stars:'★★★★★',text:'น่าประทับใจมาก ตึกเก่าแต่ถูกดูแลดี มีเรื่องราวน่าสนใจ'},
+                  {author:'คุณนุ่น',stars:'★★★★☆',text:'บรรยากาศดีมาก ร้านกาแฟในโรงสีอร่อยด้วย'}]},
+  {id:'a4',name:'บ้านนครใน',type:'thiao',cat:'วิถีชุมชน',tag:'ชุมชนเก่า | วิถีดั้งเดิม',desc:'ย่านชุมชนดั้งเดิมที่ยังคงวิถีชีวิตของชาวเมืองสงขลาแต่โบราณ มีหิ้งพระ ร้านค้าเล็กๆ และบ้านเรือนไทย-ชิโนที่งดงาม',rating:4.6,reviews:270,eco:'platinum',hours:'ตลอด 24 ชั่วโมง',location:'ถนนนครใน อ.เมือง สงขลา',color:'#0277BD',emoji:'🏘️',
+    reviews_list:[{author:'คุณแหม่ม',stars:'★★★★★',text:'ชุมชนเล็กแต่อบอุ่นมาก ผู้คนเป็นมิตร บรรยากาศดีมาก'},
+                  {author:'คุณขาว',stars:'★★★★☆',text:'ควรเดินเท้าสำรวจ มีซอกซอยน่าสนใจเยอะ'}]}
+];
+
+const SHOPS = [
+  {id:'s1',name:'ดาษดื่น',type:'chai',cat:'งานฝีมือ',tag:'งานศิลปะ | ของตกแต่ง',desc:'ร้านจำหน่ายงานฝีมือและงานศิลปะร่วมสมัยจากศิลปินท้องถิ่นสงขลา รวมถึงผลิตภัณฑ์ Design ที่ผสมผสานอัตลักษณ์เมืองสงขลา',rating:4.8,reviews:160,eco:'gold',hours:'10:00 – 20:00',location:'ถนนนางงาม สงขลา',price:'150–2,500 บาท',color:'#5C6BC0',emoji:'🎨',
+    reviews_list:[{author:'คุณมิ้ง',stars:'★★★★★',text:'ของสวยมาก ดีไซน์มีเอกลักษณ์ เป็นของฝากที่ดีมาก'},
+                  {author:'คุณจอย',stars:'★★★★★',text:'ร้านสวย สินค้าคัดสรรมาอย่างดี ราคาสมเหตุสมผล'}]},
+  {id:'s2',name:'บ้านอ้ายเหลียน',type:'chai',cat:'ของฝาก',tag:'ของฝาก | อาหารแปรรูป',desc:'ร้านของฝากสงขลาที่รวบรวมผลิตภัณฑ์ท้องถิ่นที่ดีที่สุด ทั้งอาหารทะเลแห้ง ผลไม้แปรรูป ขนมโบราณ และของที่ระลึก',rating:4.7,reviews:340,eco:'green',hours:'08:00 – 19:00',location:'ถนนนครนอก สงขลา',price:'50–500 บาท',color:'#FF7043',emoji:'🎁',
+    reviews_list:[{author:'คุณกอล์ฟ',stars:'★★★★★',text:'ซื้อกุ้งแห้งกลับบ้านทุกครั้ง อร่อยมาก'},
+                  {author:'คุณป๋อม',stars:'★★★★☆',text:'ของฝากเยอะมาก เลือกนานแต่ก็คุ้ม'}]},
+  {id:'s3',name:'สงขลาบาติก',type:'chai',cat:'ผ้าบาติก',tag:'ผ้าบาติก | งานทอ | ฝีมือท้องถิ่น',desc:'ร้านผ้าบาติกสงขลา ออกแบบลวดลายเฉพาะที่ได้แรงบันดาลใจจากธรรมชาติและวัฒนธรรมภาคใต้ ทำมือทุกชิ้น',rating:4.9,reviews:220,eco:'platinum',hours:'09:00 – 18:00',location:'ย่านเมืองเก่า สงขลา',price:'250–3,000 บาท',color:'#00796B',emoji:'🧵',
+    reviews_list:[{author:'คุณยิ้ม',stars:'★★★★★',text:'ผ้าสวยงามมาก ลวดลายเป็นเอกลักษณ์ คุ้มมากสำหรับงานมือ'},
+                  {author:'คุณข้าว',stars:'★★★★★',text:'ซื้อเป็นของขวัญ คนรับชอบมากๆ ผ้านิ่มสวย'}]},
+  {id:'s4',name:'ร้านสงขลาชอบ',type:'chai',cat:'อาหารแปรรูป',tag:'ผลิตภัณฑ์ชุมชน | อาหารทะเลแห้ง',desc:'ร้านจำหน่ายผลิตภัณฑ์แปรรูปจากชุมชนประมงสงขลา ทั้งกุ้งแห้ง ปลาแห้ง น้ำพริก และขนมท้องถิ่นที่ผ่านการรับรองมาตรฐาน OTOP',rating:4.5,reviews:190,eco:'green',hours:'07:00 – 18:00',location:'ตลาดสด สงขลา',price:'50–400 บาท',color:'#0288D1',emoji:'🦐',
+    reviews_list:[{author:'คุณใหม่',stars:'★★★★★',text:'กุ้งแห้งอร่อย สดใหม่ ซื้อกลับทุกครั้ง'},
+                  {author:'คุณเป้',stars:'★★★★☆',text:'สินค้าหลากหลาย ราคาดี เจ้าของเป็นมิตรมาก'}]}
+];
+
+const MISSIONS = [
+  {id:'m1',name:'ถ่ายรูป Street Art',desc:'ถ่ายรูปกับ Street Art บนถนนนางงาม 1 จุด',pts:20,emoji:'📸',status:'open'},
+  {id:'m2',name:'ซื้อสินค้าชุมชน',desc:'ซื้อสินค้าจากร้านค้าท้องถิ่นหรือ OTOP',pts:30,emoji:'🛍️',status:'open'},
+  {id:'m3',name:'ชิมอาหารพื้นเมือง',desc:'ลองชิมอาหารพื้นเมืองสงขลา 1 เมนูใหม่',pts:30,emoji:'🍜',status:'open'},
+  {id:'m4',name:'Check-in สถานที่สำคัญ',desc:'เช็กอินที่สถานที่ท่องเที่ยวสำคัญ 1 แห่ง',pts:20,emoji:'📍',status:'open'},
+  {id:'m5',name:'เดินครบ 5 จุด',desc:'เดินเที่ยวครบ 5 จุดในย่านเมืองเก่า',pts:40,emoji:'🚶',status:'open'},
+  {id:'m6',name:'เก็บขยะ',desc:'เก็บขยะในบริเวณแหล่งท่องเที่ยว 1 ครั้ง',pts:30,emoji:'♻️',status:'open'},
+  {id:'m7',name:'กินหมดจาน',desc:'รับประทานอาหารหมดจาน ลด Food Waste',pts:20,emoji:'🍽️',status:'open'},
+  {id:'m8',name:'พกแก้วน้ำ',desc:'พกแก้วน้ำหรือขวดส่วนตัวเที่ยวทั้งวัน',pts:20,emoji:'🧴',status:'open'},
+  {id:'m9',name:'ใช้ถุงผ้า',desc:'ใช้ถุงผ้าแทนถุงพลาสติกในการช้อปปิ้ง',pts:20,emoji:'👜',status:'open'},
+  {id:'m10',name:'เดินหรือปั่นจักรยาน',desc:'เดินหรือปั่นจักรยานเที่ยวในพื้นที่ (ไม่ขับรถ)',pts:30,emoji:'🚴',status:'open'},
+  {id:'m11',name:'แชร์การท่องเที่ยว',desc:'แชร์ประสบการณ์ท่องเที่ยวอย่างรับผิดชอบ',pts:20,emoji:'📲',status:'open'}
+];
+
+const ALL_PLACES = [...RESTAURANTS, ...ATTRACTIONS, ...SHOPS];
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let ecoPoints = parseInt(localStorage.getItem('yc_points') || '0');
+let missionsCompleted = parseInt(localStorage.getItem('yc_missions') || '0');
+let tripsCount = parseInt(localStorage.getItem('yc_trips') || '0');
+let missionStatuses = JSON.parse(localStorage.getItem('yc_mission_statuses') || '{}');
+let tripPlan = JSON.parse(localStorage.getItem('yc_trip_plan') || 'null');
+let activeMissionId = null;
+let currentMissionPts = 0;
+let currentTab = 'home';
+let heroInterval = null;
+let currentHeroSlide = 0;
+const HERO_COUNT = 3;
+
+/* ═══════════════════════════════════════
+   PERSONA
+═══════════════════════════════════════ */
+const PERSONAS = {
+  eco:{icon:'🌿',name:'นักรักษ์โลก',desc:'ใส่ใจสิ่งแวดล้อม ชอบทำภารกิจ'},
+  history:{icon:'🧭',name:'นักจารึกกาลเวลา',desc:'ชื่นชอบประวัติศาสตร์และวัฒนธรรม'},
+  food:{icon:'🍜',name:'นักชิมแห่งยุค',desc:'ชื่นชอบอาหารและรสชาติท้องถิ่น'},
+  social:{icon:'📸',name:'นักสำรวจโซเชียล',desc:'ชอบแชร์ประสบการณ์และถ่ายรูป'},
+  mixed:{icon:'⭐',name:'นักเดินทางไร้ขีด',desc:'ชื่นชอบทุกอย่างในสงขลา'}
+};
+
+function initPersona() {
+  const saved = localStorage.getItem('gs_persona');
+  let p = PERSONAS.history;
+  if (saved) {
+    const d = JSON.parse(saved);
+    const type = (d.personaType||'').toLowerCase();
+    if (type.includes('eco')||type.includes('รักษ์')) p = PERSONAS.eco;
+    else if (type.includes('food')||type.includes('ชิม')) p = PERSONAS.food;
+    else if (type.includes('social')||type.includes('โซเชียล')) p = PERSONAS.social;
+    else if (type.includes('mix')||type.includes('ไร้ขีด')) p = PERSONAS.mixed;
+  }
+  document.getElementById('personaIcon').textContent = p.icon;
+  document.getElementById('personaName').textContent = p.name;
+  document.getElementById('personaDesc').textContent = p.desc;
+  document.getElementById('profilePersonaChip').textContent = p.icon+' '+p.name;
+  document.getElementById('hdrAvatar').textContent = p.icon;
+}
+
+/* ═══════════════════════════════════════
+   SPA ROUTER
+═══════════════════════════════════════ */
+const TAB_MAP = {
+  home:{view:'viewHome',nav:'navHome'},
+  chiim:{view:'viewChiim',nav:'navChiim'},
+  thiao:{view:'viewThiao',nav:'navThiao'},
+  chai:{view:'viewChai',nav:null},
+  mission:{view:'viewMission',nav:'navMission'},
+  plan:{view:'viewPlan',nav:null},
+  profile:{view:'viewProfile',nav:'navProfile'}
+};
+
+function switchTab(tab) {
+  if (currentTab === tab && tab !== 'home') return;
+  currentTab = tab;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const cfg = TAB_MAP[tab];
+  if (!cfg) return;
+  document.getElementById(cfg.view).classList.add('active');
+  if (cfg.nav) document.getElementById(cfg.nav).classList.add('active');
+  document.getElementById('mainContent').scrollTop = 0;
+  updateStats();
+}
+
+/* ═══════════════════════════════════════
+   HERO CAROUSEL
+═══════════════════════════════════════ */
+function showHeroSlide(i) {
+  document.querySelectorAll('.hero-slide').forEach((s,idx) => s.classList.toggle('active', idx===i));
+  document.querySelectorAll('.hero-dot').forEach((d,idx) => d.classList.toggle('active', idx===i));
+  currentHeroSlide = i;
+}
+function startHeroAuto() {
+  if (heroInterval) clearInterval(heroInterval);
+  heroInterval = setInterval(() => showHeroSlide((currentHeroSlide+1)%HERO_COUNT), 4000);
+}
+document.querySelectorAll('.hero-dot').forEach(d => {
+  d.addEventListener('click', () => { showHeroSlide(parseInt(d.dataset.i)); startHeroAuto(); });
+});
+startHeroAuto();
+
+/* ═══════════════════════════════════════
+   RENDER HELPERS
+═══════════════════════════════════════ */
+function ecoLabel(e) { return e==='platinum'?'♦ Platinum':e==='gold'?'★ Gold':'🌿 Green'; }
+function ecoClass(e) { return 'eco-'+e; }
+function starsStr(r) { const f=Math.round(r); return '★'.repeat(f)+'☆'.repeat(5-f); }
+
+function buildContentCard(item) {
+  return `
+  <div class="content-card" onclick="openDetail('${item.id}')">
+    <div class="content-card-img">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,${item.color}33,${item.color}66);display:flex;align-items:center;justify-content:center;font-size:64px;">${item.emoji}</div>
+      <span class="eco-badge ${ecoClass(item.eco)}">${ecoLabel(item.eco)}</span>
+    </div>
+    <div class="content-card-body">
+      <div class="content-card-row1">
+        <div class="content-card-name">${item.name}</div>
+        <div class="rating-row"><span class="stars">${starsStr(item.rating)}</span><span class="rating-num">${item.rating}</span></div>
+      </div>
+      <div class="content-card-tag">${item.tag}</div>
+      <div class="content-card-desc">${item.desc.substring(0,90)}...</div>
+      <div class="content-card-meta">
+        <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${item.hours||'ตลอดวัน'}</div>
+        <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${item.location.split(' ')[0]}</div>
+        ${item.price?`<div class="meta-chip">💰 ${item.price}</div>`:''}
+      </div>
+      <div class="content-card-actions">
+        <button class="btn-maps" onclick="event.stopPropagation();openMaps('${item.name}','${item.location}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Maps
+        </button>
+        <button class="btn-detail" onclick="event.stopPropagation();openDetail('${item.id}')">ดูรายละเอียด</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderWithPills(listId, pillsId, data, allCats) {
+  const pillsEl = document.getElementById(pillsId);
+  const listEl = document.getElementById(listId);
+  let active = 'ทั้งหมด';
+  function render(cat) {
+    const filtered = cat==='ทั้งหมด' ? data : data.filter(d=>d.cat===cat);
+    listEl.innerHTML = filtered.map(buildContentCard).join('');
+  }
+  pillsEl.innerHTML = ['ทั้งหมด',...allCats].map(c=>`<div class="pill${c===active?' active':''}" data-cat="${c}">${c}</div>`).join('');
+  pillsEl.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', ()=>{
+      active=p.dataset.cat;
+      pillsEl.querySelectorAll('.pill').forEach(x=>x.classList.toggle('active',x.dataset.cat===active));
+      render(active);
+    });
+  });
+  render(active);
+}
+
+/* ═══════════════════════════════════════
+   RENDER ALL VIEWS
+═══════════════════════════════════════ */
+function renderChiim() {
+  renderWithPills('chiimList','chiimPills',RESTAURANTS,['ร้านอาหาร','คาเฟ่&ของหวาน','คาเฟ่&เครื่องดื่ม']);
+}
+function renderThiao() {
+  renderWithPills('thiaoList','thiaoPills',ATTRACTIONS,['ประวัติศาสตร์','ศิลปะ','วิถีชุมชน']);
+}
+function renderChai() {
+  renderWithPills('chaiList','chaiPills',SHOPS,['งานฝีมือ','ของฝาก','ผ้าบาติก','อาหารแปรรูป']);
+}
+
+function renderMissions() {
+  document.getElementById('missionPointsDisplay').textContent = ecoPoints;
+  const pct = Math.min(100,(ecoPoints/300)*100);
+  document.getElementById('missionProgressFill').style.width = pct+'%';
+  const level = ecoPoints>=300?'🌳 ต้นไม้ใหญ่':ecoPoints>=150?'🌿 กล้าไม้':ecoPoints>=60?'🌱 ต้นกล้า':'🌱 เมล็ดพันธุ์';
+  document.getElementById('missionLevelLabel').textContent = level;
+  const grid = document.getElementById('missionsGrid');
+  grid.innerHTML = MISSIONS.map(m => {
+    const st = missionStatuses[m.id] || m.status;
+    const isDone = st==='done'; const isPending = st==='pending';
+    return `
+    <div class="mission-card${isDone?' completed':''}" id="mcard-${m.id}">
+      <div class="mission-card-img">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#2E7D5A22,#4CAF8844);display:flex;align-items:center;justify-content:center;font-size:40px;">${m.emoji}</div>
+        <div class="mission-points-badge">+${m.pts} pts</div>
+      </div>
+      <div class="mission-card-body">
+        <div class="mission-card-name">${m.name}</div>
+        <div class="mission-card-desc">${m.desc}</div>
+        <div class="mission-status-chip ${isDone?'status-done':isPending?'status-pending':'status-open'}">
+          ${isDone?'✅ สำเร็จ':isPending?'⏳ กำลังตรวจ':'🎯 รอทำ'}
+        </div>
+        ${!isDone&&!isPending?`<button class="btn-submit-mission" onclick="openMissionModal('${m.id}',${m.pts},'${m.name}')">📤 ส่งภารกิจ</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderRecSection() {
+  const wrap = document.getElementById('recScrollWrap');
+  const items = [...ATTRACTIONS.slice(0,2),...RESTAURANTS.slice(0,2),...SHOPS.slice(0,1)];
+  wrap.innerHTML = items.map(item => `
+    <div class="rec-card" onclick="openDetail('${item.id}')">
+      <div class="rec-card-img">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,${item.color}44,${item.color}88);display:flex;align-items:center;justify-content:center;font-size:44px;">${item.emoji}</div>
+        <span class="eco-badge ${ecoClass(item.eco)}">${ecoLabel(item.eco)}</span>
+      </div>
+      <div class="rec-card-body">
+        <div class="rec-card-name">${item.name}</div>
+        <div class="rec-card-type">${starsStr(item.rating)} ${item.rating} · ${item.cat}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderDailyMissions() {
+  const preview = document.getElementById('dailyMissionsPreview');
+  preview.innerHTML = MISSIONS.slice(0,3).map(m=>`
+    <div class="daily-mission-item" onclick="switchTab('mission')">
+      <div class="daily-mission-emoji">${m.emoji}</div>
+      <div class="daily-mission-info">
+        <div class="daily-mission-name">${m.name}</div>
+        <div class="daily-mission-pts">+${m.pts} Eco Points</div>
+      </div>
+      <div class="daily-mission-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════
+   DETAIL MODAL
+═══════════════════════════════════════ */
+function openDetail(id) {
+  const item = ALL_PLACES.find(x=>x.id===id);
+  if (!item) return;
+  const modal = document.getElementById('detailModal');
+  const hero = document.getElementById('detailHero');
+  hero.style.background = `linear-gradient(135deg,${item.color}44,${item.color}88)`;
+  hero.innerHTML = `
+    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px;">${item.emoji}</div>
+    <div class="detail-hero-overlay"></div>
+    <button class="detail-close-btn" onclick="closeDetail()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  document.getElementById('detailName').textContent = item.name;
+  document.getElementById('detailType').textContent = item.tag;
+  document.getElementById('detailStars').textContent = starsStr(item.rating);
+  document.getElementById('detailRating').textContent = item.rating;
+  document.getElementById('detailReviewCount').textContent = `(${item.reviews} รีวิว)`;
+  document.getElementById('detailDesc').textContent = item.desc;
+  document.getElementById('detailInfoGrid').innerHTML = `
+    <div class="detail-info-item"><div class="detail-info-label">⏰ เวลาเปิดทำการ</div><div class="detail-info-value">${item.hours||'ตลอดวัน'}</div></div>
+    <div class="detail-info-item"><div class="detail-info-label">📍 ที่ตั้ง</div><div class="detail-info-value">${item.location}</div></div>
+    ${item.price?`<div class="detail-info-item"><div class="detail-info-label">💰 ราคา</div><div class="detail-info-value">${item.price}</div></div>`:''}
+    <div class="detail-info-item"><div class="detail-info-label">🌿 Eco Score</div><div class="detail-info-value">${ecoLabel(item.eco)}</div></div>`;
+  document.getElementById('detailReviews').innerHTML = (item.reviews_list||[]).map(r=>`
+    <div class="review-item">
+      <div class="review-header"><span class="review-author">${r.author}</span><span class="review-stars">${r.stars}</span></div>
+      <div class="review-text">${r.text}</div>
+    </div>`).join('');
+  document.getElementById('detailMapBtn').onclick = () => openMaps(item.name,item.location);
+  modal.classList.add('open');
+  document.getElementById('detailSheet').scrollTop = 0;
+}
+function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
+document.getElementById('detailModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeDetail(); });
+
+/* ═══════════════════════════════════════
+   GOOGLE MAPS
+═══════════════════════════════════════ */
+function openMaps(name,loc) {
+  const q = encodeURIComponent(name+' '+loc+' สงขลา');
+  window.open('https://www.google.com/maps/search/?api=1&query='+q,'_blank');
+}
+
+/* ═══════════════════════════════════════
+   SEARCH OVERLAY
+═══════════════════════════════════════ */
+document.getElementById('btnSearchOpen').addEventListener('click', () => {
+  document.getElementById('searchOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('searchInput').focus(),150);
+});
+document.getElementById('btnSearchClose').addEventListener('click', closeSearch);
+document.getElementById('searchOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeSearch(); });
+
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchResults').innerHTML = '<div class="search-empty">🔍 พิมพ์เพื่อค้นหา...</div>';
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  const res = document.getElementById('searchResults');
+  if (!q) { res.innerHTML='<div class="search-empty">🔍 พิมพ์เพื่อค้นหา...</div>'; return; }
+  const hits = ALL_PLACES.filter(x =>
+    x.name.toLowerCase().includes(q) || x.tag.toLowerCase().includes(q) ||
+    x.desc.toLowerCase().includes(q) || x.cat.toLowerCase().includes(q)
+  ).slice(0,8);
+  if (!hits.length) { res.innerHTML='<div class="search-empty">ไม่พบผลลัพธ์ที่ตรงกัน</div>'; return; }
+  res.innerHTML = hits.map(h=>`
+    <div class="search-result-item" onclick="closeSearch();openDetail('${h.id}')">
+      <div class="search-result-img" style="background:linear-gradient(135deg,${h.color}44,${h.color}66);display:flex;align-items:center;justify-content:center;font-size:24px;">${h.emoji}</div>
+      <div class="search-result-info">
+        <div class="search-result-name">${h.name}</div>
+        <div class="search-result-type">${h.cat} · ${starsStr(h.rating)} ${h.rating}</div>
+      </div>
+    </div>`).join('');
+});
+
+/* ═══════════════════════════════════════
+   MISSION MODAL
+═══════════════════════════════════════ */
+function openMissionModal(id, pts, name) {
+  activeMissionId = id; currentMissionPts = pts;
+  document.getElementById('missionModalTitle').textContent = '📤 ส่งภารกิจ: '+name;
+  document.getElementById('missionModalSub').textContent = `อัปโหลดหลักฐานเพื่อรับ +${pts} Eco Points`;
+  document.getElementById('uploadZone').classList.remove('has-img');
+  document.getElementById('uploadPreview').style.display='none';
+  document.getElementById('uploadPreview').src='';
+  document.getElementById('aiCheckSteps').style.display='none';
+  document.getElementById('btnSendMission').disabled = true;
+  document.getElementById('uploadZone').style.display='block';
+  document.getElementById('missionModal').classList.add('open');
+}
+function closeMissionModal() { document.getElementById('missionModal').classList.remove('open'); activeMissionId=null; }
+document.getElementById('missionModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeMissionModal(); });
+
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const preview = document.getElementById('uploadPreview');
+    preview.src = ev.target.result;
+    preview.style.display = 'block';
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('btnSendMission').disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+function submitMission() {
+  if (!activeMissionId) return;
+  const btn = document.getElementById('btnSendMission');
+  btn.disabled = true; btn.innerHTML = '⏳ กำลังตรวจสอบ...';
+  const steps = document.getElementById('aiCheckSteps');
+  steps.style.display = 'flex';
+  const stepIds = ['step-img','step-gps','step-time'];
+  const stepMsgs = ['🤖 AI ตรวจภาพสำเร็จ','📍 GPS ยืนยันตำแหน่งแล้ว','✅ เวลาถูกต้อง'];
+  let i = 0;
+  function runStep() {
+    if (i >= stepIds.length) {
+      // All pass
+      missionStatuses[activeMissionId] = 'pending';
+      localStorage.setItem('yc_mission_statuses', JSON.stringify(missionStatuses));
+      closeMissionModal();
+      setTimeout(() => {
+        missionStatuses[activeMissionId] = 'done';
+        ecoPoints += currentMissionPts;
+        missionsCompleted++;
+        localStorage.setItem('yc_mission_statuses', JSON.stringify(missionStatuses));
+        localStorage.setItem('yc_points', ecoPoints);
+        localStorage.setItem('yc_missions', missionsCompleted);
+        renderMissions();
+        updateStats();
+        showToast('🎉','ภารกิจสำเร็จ!','คุณได้รับ +'+currentMissionPts+' Eco Points',currentMissionPts);
+        if (ecoPoints >= 100 && missionsCompleted % 3 === 0) {
+          setTimeout(() => openRewardModal(), 2000);
+        }
+      }, 800);
+      return;
+    }
+    const el = document.getElementById(stepIds[i]);
+    el.querySelector('.check-step-icon').className = 'check-step-icon step-loading';
+    el.querySelector('.check-step-icon').textContent = '...';
+    setTimeout(() => {
+      el.querySelector('.check-step-icon').className = 'check-step-icon step-ok';
+      el.querySelector('.check-step-icon').textContent = '✓';
+      el.querySelector('span').textContent = stepMsgs[i];
+      i++; runStep();
+    }, 900);
+  }
+  runStep();
+}
+
+/* ═══════════════════════════════════════
+   REWARD MODAL
+═══════════════════════════════════════ */
+function openRewardModal() {
+  document.getElementById('rewardDesc').innerHTML = `คุณได้รับ <strong>${currentMissionPts} Eco Points!</strong><br/>ยืนยัน 3 ภารกิจแล้ว รับของรางวัลได้เลย 🎁`;
+  document.getElementById('rewardModal').classList.add('open');
+}
+function closeReward() { document.getElementById('rewardModal').classList.remove('open'); }
+function selectReward(el, type) {
+  document.querySelectorAll('.reward-option').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function claimReward() {
+  closeReward();
+  showToast('🎁','รับรางวัลสำเร็จ!','เจ้าหน้าที่จะติดต่อกลับภายใน 3 วัน',0);
+}
+document.getElementById('rewardModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeReward(); });
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+let toastTimer = null;
+function showToast(icon, title, sub, pts) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastSub').textContent = sub;
+  document.getElementById('toastPoints').textContent = pts>0?'+'+pts:'';
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+/* ═══════════════════════════════════════
+   TRIP PLANNER
+═══════════════════════════════════════ */
+let currentDragItem = null;
+let addingToSlot = 'morning';
+
+document.getElementById('btnCreateTrip').addEventListener('click', () => {
+  const d = new Date(); const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+  document.getElementById('tripDateInput').value = `${y}-${m}-${day}`;
+  document.getElementById('createTripModal').classList.add('open');
+});
+document.getElementById('createTripModal').addEventListener('click', e => {
+  if(e.target===e.currentTarget) document.getElementById('createTripModal').classList.remove('open');
+});
+
+function confirmCreateTrip() {
+  const name = document.getElementById('tripNameInput').value || 'ทริปเมืองเก่าสงขลา';
+  const date = document.getElementById('tripDateInput').value;
+  const days = document.getElementById('tripDaysInput').value || 1;
+  tripPlan = {name, date, days, morning:[], noon:[], evening:[]};
+  localStorage.setItem('yc_trip_plan', JSON.stringify(tripPlan));
+  tripsCount++;
+  localStorage.setItem('yc_trips', tripsCount);
+  document.getElementById('createTripModal').classList.remove('open');
+  document.getElementById('plannerEmpty').style.display='none';
+  document.getElementById('tripBuilder').style.display='block';
+  document.getElementById('tripName').textContent = name;
+  updateTripMeta();
+  setupDropZones();
+  updateStats();
+}
+
+function updateTripMeta() {
+  if (!tripPlan) return;
+  const total = (tripPlan.morning||[]).length + (tripPlan.noon||[]).length + (tripPlan.evening||[]).length;
+  document.getElementById('tripMeta').textContent = `${tripPlan.days} วัน | ${total} สถานที่`;
+}
+
+function setupDropZones() {
+  ['Morning','Noon','Evening'].forEach(slot => {
+    const zone = document.getElementById('drop'+slot);
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('drag-over');
+      if (currentDragItem) {
+        addToTimeline(currentDragItem, slot.toLowerCase());
+        currentDragItem = null;
+      }
+    });
+    renderSlot(slot.toLowerCase());
+  });
+}
+
+function addToTimeline(item, slot) {
+  if (!tripPlan) return;
+  if (!tripPlan[slot]) tripPlan[slot] = [];
+  if (!tripPlan[slot].find(x=>x.id===item.id)) {
+    tripPlan[slot].push({id:item.id,name:item.name,emoji:item.emoji,sub:item.cat,color:item.color});
+    localStorage.setItem('yc_trip_plan', JSON.stringify(tripPlan));
+    renderSlot(slot);
+    updateTripMeta();
+    showToast('📍',`เพิ่ม "${item.name}" แล้ว!`,'ลากเพื่อจัดลำดับได้',0);
+  }
+}
+
+function renderSlot(slot) {
+  const capSlot = slot.charAt(0).toUpperCase()+slot.slice(1);
+  const zone = document.getElementById('drop'+capSlot);
+  if (!tripPlan) return;
+  const items = tripPlan[slot]||[];
+  if (!items.length) {
+    zone.innerHTML = '<div class="timeline-dropzone-hint">ลากสถานที่มาวางที่นี่<br/>หรือกด "เพิ่มสถานที่"</div>';
+    return;
+  }
+  zone.innerHTML = items.map((it,i)=>`
+    <div class="timeline-item" draggable="true" data-id="${it.id}" data-slot="${slot}">
+      <div class="timeline-item-img" style="background:linear-gradient(135deg,${it.color}44,${it.color}66);display:flex;align-items:center;justify-content:center;font-size:24px;">${it.emoji}</div>
+      <div class="timeline-item-info">
+        <div class="timeline-item-name">${it.name}</div>
+        <div class="timeline-item-sub">${it.sub}</div>
+      </div>
+      <button class="btn-remove-item" onclick="removeFromSlot('${slot}','${it.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+  zone.querySelectorAll('.timeline-item').forEach(el => {
+    el.addEventListener('dragstart', () => {
+      currentDragItem = null;
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+  });
+}
+
+function removeFromSlot(slot, id) {
+  if (!tripPlan||!tripPlan[slot]) return;
+  tripPlan[slot] = tripPlan[slot].filter(x=>x.id!==id);
+  localStorage.setItem('yc_trip_plan', JSON.stringify(tripPlan));
+  renderSlot(slot);
+  updateTripMeta();
+}
+
+/* Place Picker */
+document.getElementById('btnAddPlace').addEventListener('click', () => {
+  document.getElementById('pickerSearchInput').value = '';
+  filterPicker('');
+  document.getElementById('placePickerModal').classList.add('open');
+});
+document.getElementById('placePickerModal').addEventListener('click', e => {
+  if(e.target===e.currentTarget) document.getElementById('placePickerModal').classList.remove('open');
+});
+
+function filterPicker(q) {
+  const results = document.getElementById('pickerResults');
+  const filtered = q ? ALL_PLACES.filter(x=>x.name.toLowerCase().includes(q.toLowerCase())||x.cat.toLowerCase().includes(q.toLowerCase())) : ALL_PLACES;
+  results.innerHTML = filtered.map(item=>`
+    <div class="picker-item">
+      <div class="picker-item-img" style="background:linear-gradient(135deg,${item.color}44,${item.color}66);display:flex;align-items:center;justify-content:center;font-size:24px;">${item.emoji}</div>
+      <div style="flex:1;">
+        <div class="picker-item-name">${item.name}</div>
+        <div class="picker-item-sub">${item.cat} · ${item.eco.toUpperCase()}</div>
+      </div>
+      <button class="picker-add-btn" onclick="pickerAddItem('${item.id}')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+function pickerAddItem(id) {
+  const item = ALL_PLACES.find(x=>x.id===id);
+  if (!item) return;
+  // Add to morning by default
+  addToTimeline(item, 'morning');
+  document.getElementById('placePickerModal').classList.remove('open');
+}
+
+// Make timeline items draggable into slots
+setupDragFromPicker();
+function setupDragFromPicker() {
+  // Picker items are added with onclick, drag from picker isn't needed for MVP
+}
+
+function saveTripPlan() {
+  if (!tripPlan) return;
+  localStorage.setItem('yc_trip_plan', JSON.stringify(tripPlan));
+  showToast('💾','บันทึกแผนทริปสำเร็จ!','ทริปของคุณถูกบันทึกเรียบร้อย',0);
+}
+
+function shareTrip() {
+  if (navigator.share) {
+    navigator.share({title:'แผนทริปสงขลา - เยาวชวน',text:'มาเที่ยวเมืองเก่าสงขลาด้วยกัน!',url:window.location.href});
+  } else {
+    showToast('🔗','คัดลอกลิงก์แล้ว!','แชร์ให้เพื่อนมาเที่ยวด้วยกัน',0);
+  }
+}
+
+function restoreTripPlan() {
+  if (!tripPlan) return;
+  document.getElementById('plannerEmpty').style.display='none';
+  document.getElementById('tripBuilder').style.display='block';
+  document.getElementById('tripName').textContent = tripPlan.name||'ทริปสงขลา';
+  updateTripMeta();
+  setupDropZones();
+}
+
+/* ═══════════════════════════════════════
+   STATS & PROFILE
+═══════════════════════════════════════ */
+function updateStats() {
+  document.getElementById('statPoints').textContent = ecoPoints;
+  document.getElementById('statMissions').textContent = missionsCompleted;
+  document.getElementById('statTrips').textContent = tripsCount;
+  document.getElementById('missionPointsDisplay').textContent = ecoPoints;
+  const pct = Math.min(100,(ecoPoints/300)*100);
+  const fill = document.getElementById('missionProgressFill');
+  if (fill) fill.style.width = pct+'%';
+}
+
+function badgeAlert(icon, name, desc) {
+  showToast(icon, name, desc, 0);
+}
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+function navigateTo(url) {
+  const overlay = document.getElementById('pageOverlay');
+  overlay.classList.add('active');
+  setTimeout(()=>{ window.location.href=url; }, 350);
+}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+function init() {
+  initPersona();
+  renderChiim();
+  renderThiao();
+  renderChai();
+  renderMissions();
+  renderRecSection();
+  renderDailyMissions();
+  updateStats();
+  if (tripPlan) restoreTripPlan();
+
+  // Greeting
+  const hour = new Date().getHours();
+  const greet = hour<12?'สวัสดีตอนเช้า':'hour<17'?'สวัสดีตอนบ่าย':'สวัสดีตอนเย็น';
+  document.getElementById('hdrGreeting').textContent = hour<12?'🌅 สวัสดีตอนเช้า':hour<17?'☀️ สวัสดีตอนบ่าย':'🌆 สวัสดีตอนเย็น';
+
+  // Fade in
+  document.getElementById('pageOverlay').classList.remove('active');
+}
+document.getElementById('pageOverlay').classList.add('active');
+window.addEventListener('load', () => { setTimeout(init, 50); });
+</script>
+</body>
+</html>
